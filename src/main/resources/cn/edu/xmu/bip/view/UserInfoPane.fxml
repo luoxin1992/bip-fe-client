@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+<VBox xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1"
+      fx:id="vbUserInfo" fx:controller="cn.edu.xmu.bip.presenter.UserInfoPanePresenter"
+      alignment="CENTER" prefHeight="450.0" prefWidth="341.0"
+      style="-fx-background-radius: 16; -fx-background-color: rgba(255, 255, 255, 0.5);">
+    <ImageView fx:id="ivPhoto" fitHeight="300.0" fitWidth="227.0" pickOnBounds="true" preserveRatio="true">
+        <Image url="@../image/main/photo-unknown.png"/>
+    </ImageView>
+    <HBox alignment="BASELINE_LEFT">
+        <Text fx:id="txtNumberPrompt" fill="grey" text="编号：">
+            <font>
+                <Font size="28.0"/>
+            </font>
+        </Text>
+        <Text fx:id="txtNumber" text="-">
+            <font>
+                <Font size="56.0"/>
+            </font>
+        </Text>
+    </HBox>
+    <HBox alignment="BASELINE_LEFT">
+        <Text fx:id="txtNamePrompt" fill="grey" text="姓名：">
+            <font>
+                <Font size="28.0"/>
+            </font>
+        </Text>
+        <Text fx:id="txtName" text="-">
+            <font>
+                <Font size="56.0"/>
+            </font>
+        </Text>
+    </HBox>
+</VBox>
