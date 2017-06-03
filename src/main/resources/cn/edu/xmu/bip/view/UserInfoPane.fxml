@@ -1,40 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
 <VBox xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1"
-      fx:id="vbUserInfo" fx:controller="cn.edu.xmu.bip.presenter.UserInfoPanePresenter"
+      fx:id="vbUser" fx:controller="cn.edu.xmu.bip.presenter.UserInfoPanePresenter"
       alignment="CENTER" prefHeight="450.0" prefWidth="341.0"
       style="-fx-background-radius: 16; -fx-background-color: rgba(255, 255, 255, 0.5);">
     <ImageView fx:id="ivPhoto" fitHeight="300.0" fitWidth="227.0" pickOnBounds="true" preserveRatio="true">
         <Image url="@../image/main/photo-unknown.png"/>
     </ImageView>
     <HBox alignment="BASELINE_LEFT">
-        <Text fx:id="txtNumberPrompt" fill="grey" text="编号：">
+        <Label fx:id="lblNumberPrompt" minHeight="-Infinity" minWidth="-Infinity" text="编号：" textFill="#808080">
             <font>
                 <Font size="28.0"/>
             </font>
-        </Text>
-        <Text fx:id="txtNumber" text="-">
+        </Label>
+        <Label fx:id="lblNumber" text="客户编号显示区域" textOverrun="WORD_ELLIPSIS">
             <font>
                 <Font size="56.0"/>
             </font>
-        </Text>
+        </Label>
     </HBox>
     <HBox alignment="BASELINE_LEFT">
-        <Text fx:id="txtNamePrompt" fill="grey" text="姓名：">
+        <Label fx:id="lblNamePrompt" minHeight="-Infinity" minWidth="-Infinity" text="姓名：" textFill="#808080">
             <font>
                 <Font size="28.0"/>
             </font>
-        </Text>
-        <Text fx:id="txtName" text="-">
+        </Label>
+        <Label fx:id="lblName" text="客户姓名显示区域" textOverrun="WORD_ELLIPSIS">
             <font>
                 <Font size="56.0"/>
             </font>
-        </Text>
+        </Label>
     </HBox>
 </VBox>

@@ -7,9 +7,10 @@ import cn.edu.xmu.bip.util.FontUtil;
 import cn.edu.xmu.bip.util.MeasurementUtil;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -24,46 +25,47 @@ public class UserInfoPanePresenter implements Initializable {
     //整个窗格占屏幕1/3宽、3/4高，间距为屏幕1/24高
     private static final double PANE_WIDTH_FACTOR = (double) 1 / 3;
     private static final double PANE_HEIGHT_FACTOR = (double) 3 / 4;
-    private static final double PANE_SPACING_FACTOR = (double) 1 / 24;
+    private static final double PANE_MARGIN_FACTOR = (double) 1 / 24;
     //照片占整个窗格的2/3宽、2/3高
-    private static final double PHOTO_WIDTH_FACTOR = (double) 2 / 3;
-    private static final double PHOTO_HEIGHT_FACTOR = (double) 2 / 3;
-    //正文文本占整个窗格的1/8，提示文本占整个窗格的1/16高
-    private static final double TEXT_HEIGHT_FACTOR = (double) 1 / 8;
-    private static final double TEXT_PROMPT_HEIGHT_FACTOR = (double) 1 / 16;
+    private static final double IMAGE_WIDTH_FACTOR = (double) 2 / 3;
+    private static final double IMAGE_HEIGHT_FACTOR = (double) 2 / 3;
+    //编号、姓名正文占整个窗格的1/8，提示占整个窗格的1/16高
+    private static final double LABEL_HEIGHT_FACTOR = (double) 1 / 8;
+    private static final double LABEL_PROMPT_HEIGHT_FACTOR = (double) 1 / 16;
 
     @FXML
-    private VBox vbUserInfo;
+    private VBox vbUser;
     @FXML
     private ImageView ivPhoto;
     @FXML
-    private Text txtNumberPrompt;
+    private Label lblNumberPrompt;
     @FXML
-    private Text txtNumber;
+    private Label lblNumber;
     @FXML
-    private Text txtNamePrompt;
+    private Label lblNamePrompt;
     @FXML
-    private Text txtName;
+    private Label lblName;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         double paneWidth = MeasurementUtil.getNodeWidthByFactor(PANE_WIDTH_FACTOR);
         double paneHeight = MeasurementUtil.getNodeHeightByFactor(PANE_HEIGHT_FACTOR);
-        double paneSpacing = MeasurementUtil.getNodeHeightByFactor(PANE_SPACING_FACTOR);
-        vbUserInfo.setPrefWidth(paneWidth);
-        vbUserInfo.setPrefHeight(paneHeight);
-        vbUserInfo.setSpacing(paneSpacing);
+        double paneMargin = MeasurementUtil.getNodeSizeInParentByFactor(paneHeight, PANE_MARGIN_FACTOR);
+        vbUser.setPrefWidth(paneWidth);
+        vbUser.setPrefHeight(paneHeight);
+        vbUser.setSpacing(paneMargin);
+        vbUser.setPadding(new Insets(paneMargin));
 
-        double photoWidth = MeasurementUtil.getNodeWidthByFactor(paneWidth, PHOTO_WIDTH_FACTOR);
-        double photoHeight = MeasurementUtil.getNodeHeightByFactor(paneHeight, PHOTO_HEIGHT_FACTOR);
+        double photoWidth = MeasurementUtil.getNodeSizeInParentByFactor(paneWidth, IMAGE_WIDTH_FACTOR);
+        double photoHeight = MeasurementUtil.getNodeSizeInParentByFactor(paneHeight, IMAGE_HEIGHT_FACTOR);
         ivPhoto.setFitWidth(photoWidth);
         ivPhoto.setFitHeight(photoHeight);
 
-        double textHeight = MeasurementUtil.getNodeHeightByFactor(paneHeight, TEXT_HEIGHT_FACTOR);
-        double textPromptHeight = MeasurementUtil.getNodeHeightByFactor(paneHeight, TEXT_PROMPT_HEIGHT_FACTOR);
-        txtNumberPrompt.setFont(FontUtil.loadFont(textPromptHeight, false));
-        txtNumber.setFont(FontUtil.loadFont(textHeight, true));
-        txtNamePrompt.setFont(FontUtil.loadFont(textPromptHeight, false));
-        txtName.setFont(FontUtil.loadFont(textHeight, true));
+        double labelHeight = MeasurementUtil.getNodeSizeInParentByFactor(paneHeight, LABEL_HEIGHT_FACTOR);
+        double labelPromptHeight = MeasurementUtil.getNodeSizeInParentByFactor(paneHeight, LABEL_PROMPT_HEIGHT_FACTOR);
+        lblNumberPrompt.setFont(FontUtil.loadFont(labelPromptHeight, false));
+        lblNumber.setFont(FontUtil.loadFont(labelHeight, true));
+        lblNamePrompt.setFont(FontUtil.loadFont(labelPromptHeight, false));
+        lblName.setFont(FontUtil.loadFont(labelHeight, true));
     }
 }
