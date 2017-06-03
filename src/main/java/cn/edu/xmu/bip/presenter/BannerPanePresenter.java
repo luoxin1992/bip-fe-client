@@ -31,8 +31,8 @@ public class BannerPanePresenter implements Initializable {
     private static final double COMPANY_HEIGHT_FACTOR = (double) 2 / 3;
     private static final double PRODUCT_HEIGHT_FACTOR = (double) 1 / 3;
     //窄装饰线条占整个窗格全宽、1/15高
-    private static final double RECTANGLE_NARROW_WIDTH_FACTOR = (double) 1;
-    private static final double RECTANGLE_NARROW_HEIGHT_FACTOR = (double) 1 / 15;
+    private static final double RECT_NARROW_WIDTH_FACTOR = (double) 1;
+    private static final double RECT_NARROW_HEIGHT_FACTOR = (double) 1 / 15;
 
     @FXML
     private AnchorPane apBanner;
@@ -60,20 +60,19 @@ public class BannerPanePresenter implements Initializable {
         apBanner.setPrefHeight(paneHeight);
 
         //公司LOGO、名称、产品名称
-        double companyHeight = MeasurementUtil.getNodeHeightByFactor(paneHeight, COMPANY_HEIGHT_FACTOR);
-        double productHeight = MeasurementUtil.getNodeHeightByFactor(paneHeight, PRODUCT_HEIGHT_FACTOR);
+        double companyHeight = MeasurementUtil.getNodeSizeInParentByFactor(paneHeight, COMPANY_HEIGHT_FACTOR);
+        double productHeight = MeasurementUtil.getNodeSizeInParentByFactor(paneHeight, PRODUCT_HEIGHT_FACTOR);
         ivCompany.setFitHeight(companyHeight);
         txtCompany.setFont(FontUtil.loadFont(companyHeight, true));
         txtProduct.setFont(FontUtil.loadFont(productHeight, false));
 
         //底部装饰几何图形
-        double rectNarrowWidth = MeasurementUtil.getNodeWidthByFactor(paneWidth, RECTANGLE_NARROW_WIDTH_FACTOR);
-        double rectNarrowHeight = MeasurementUtil.getNodeHeightByFactor(paneHeight, RECTANGLE_NARROW_HEIGHT_FACTOR);
+        double rectNarrowWidth = MeasurementUtil.getNodeSizeInParentByFactor(paneWidth, RECT_NARROW_WIDTH_FACTOR);
+        double rectNarrowHeight = MeasurementUtil.getNodeSizeInParentByFactor(paneHeight, RECT_NARROW_HEIGHT_FACTOR);
         rectNarrow.setWidth(rectNarrowWidth);
         rectNarrow.setHeight(rectNarrowHeight);
-        //宽矩形用于覆盖右下角产品名称，故宽高依据其计算
-        double rectWideWidth = txtProduct.getLayoutBounds().getWidth() + productHeight;
-        double rectWideHeight = productHeight;
+        double rectWideWidth = txtProduct.getLayoutBounds().getWidth() + txtProduct.getLayoutBounds().getHeight();
+        double rectWideHeight = txtProduct.getLayoutBounds().getHeight();
         rectWide.setWidth(rectWideWidth);
         rectWide.setHeight(rectWideHeight);
         double polyPoint1X = paneWidth - rectWideWidth;
@@ -86,9 +85,9 @@ public class BannerPanePresenter implements Initializable {
         polyShelter.getPoints().addAll(polyPoint1X, polyPoint1Y, polyPoint2X, polyPoint2Y, polyPoint3X, polyPoint3Y);
 
         //公司信息边距
-        double margin = (paneHeight - companyHeight - rectNarrowHeight) / 2;
-        hbCompany.setSpacing(margin);
-        AnchorPane.setTopAnchor(hbCompany, margin);
-        AnchorPane.setLeftAnchor(hbCompany, margin);
+        double companyMargin = (paneHeight - companyHeight - rectNarrowHeight) / 2;
+        hbCompany.setSpacing(companyMargin);
+        AnchorPane.setTopAnchor(hbCompany, companyMargin);
+        AnchorPane.setLeftAnchor(hbCompany, companyMargin);
     }
 }

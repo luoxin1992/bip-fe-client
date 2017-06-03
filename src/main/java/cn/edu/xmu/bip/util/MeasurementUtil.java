@@ -24,18 +24,14 @@ public class MeasurementUtil {
     }
 
     public static double getNodeWidthByFactor(double factor) {
-        return SCREEN_WIDTH * factor;
+        return Math.rint(SCREEN_WIDTH * factor);
     }
 
     public static double getNodeHeightByFactor(double factor) {
-        return SCREEN_HEIGHT * factor;
+        return Math.rint(SCREEN_HEIGHT * factor);
     }
 
-    public static double getNodeWidthByFactor(double parentWidth, double factor) {
-        return parentWidth * factor;
-    }
-
-    public static double getNodeHeightByFactor(double parentHeight, double factor) {
-        return parentHeight * factor;
+    public static double getNodeSizeInParentByFactor(double parent, double factor) {
+        return Math.rint(parent * factor);
     }
 }

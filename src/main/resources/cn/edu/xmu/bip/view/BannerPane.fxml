@@ -10,13 +10,13 @@
 <?import javafx.scene.text.Text?>
 <AnchorPane xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1"
             fx:id="apBanner" fx:controller="cn.edu.xmu.bip.presenter.BannerPanePresenter"
-            prefHeight="75.0" prefWidth="1024.0" style="-fx-background-color: rgba(0, 0, 0, 0.0);">
+            prefHeight="75.0" prefWidth="1024.0" style="-fx-background-color: rgba(255, 255, 255, 0.0);">
     <HBox fx:id="hbCompany" alignment="CENTER_LEFT" spacing="10.0"
           AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0">
         <ImageView fx:id="ivCompany" fitHeight="50.0" pickOnBounds="true" preserveRatio="true">
             <Image url="@../image/main/company-unknown.png"/>
         </ImageView>
-        <Text fx:id="txtCompany" fill="#ffffff" text="公司信息显示区域">
+        <Text fx:id="txtCompany" fill="#ffffff" text="公司名称显示区域">
             <font>
                 <Font size="48.0"/>
             </font>
