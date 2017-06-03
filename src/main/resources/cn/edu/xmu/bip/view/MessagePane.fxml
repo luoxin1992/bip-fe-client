@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<VBox xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
+      fx:id="vbMessage" fx:controller="cn.edu.xmu.bip.presenter.MessagePanePresenter"
+      alignment="CENTER" prefHeight="525.0" prefWidth="683.0" spacing="60.0"
+      style="-fx-background-color: rgba(255, 255, 255, 0.5); -fx-background-radius: 16;">
+    <ImageView fx:id="ivMessage" fitHeight="394.0" fitWidth="512.0" pickOnBounds="true" preserveRatio="true">
+        <Image url="@../image/main/message-no-image.png"/>
+    </ImageView>
+    <Label fx:id="lblMessage" alignment="CENTER" textOverrun="WORD_ELLIPSIS" text="消息内容显示区域">
+        <font>
+            <Font size="72.0"/>
+        </font>
+    </Label>
+</VBox>
