@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<StackPane xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
+           prefHeight="525.0" prefWidth="1024.0"
+           fx:id="spProduct" fx:controller="cn.edu.xmu.bip.presenter.ProductPanePresenter">
+    <Pane fx:id="paneAnimation"/>
+    <VBox alignment="CENTER" prefHeight="200.0" StackPane.alignment="CENTER">
+        <ImageView fx:id="ivLogo" fitHeight="210.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../image/welcome/product-logo.png"/>
+        </ImageView>
+        <Label fx:id="lblName" text="服务型窗口业务交互平台" textFill="WHITE">
+            <font>
+                <Font size="72.0"/>
+            </font>
+        </Label>
+    </VBox>
+</StackPane>

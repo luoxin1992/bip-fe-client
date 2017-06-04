@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<HBox xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1"
+      alignment="CENTER_LEFT" minWidth="-Infinity" prefHeight="75.0"
+      fx:id="hbPartner" fx:controller="cn.edu.xmu.bip.presenter.PartnerPanePresenter">
+    <ImageView fx:id="ivCrossmatch" fitHeight="60.0" pickOnBounds="true" preserveRatio="true">
+        <Image url="@../image/welcome/partner-crossmatch.png"/>
+    </ImageView>
+    <ImageView fx:id="ivDivider1" fitHeight="60.0" pickOnBounds="true" preserveRatio="true">
+        <Image url="@../image/welcome/partner-divider.png"/>
+    </ImageView>
+    <ImageView fx:id="ivIflytek" fitHeight="60.0" pickOnBounds="true" preserveRatio="true">
+        <Image url="@../image/welcome/partner-iflytek.png"/>
+    </ImageView>
+    <ImageView fx:id="ivDivider2" fitHeight="60.0" pickOnBounds="true" preserveRatio="true">
+        <Image url="@../image/welcome/partner-divider.png"/>
+    </ImageView>
+    <ImageView fx:id="ivMtyun" fitHeight="60.0" pickOnBounds="true" preserveRatio="true">
+        <Image url="@../image/welcome/partner-mtyun.png"/>
+    </ImageView>
+</HBox>

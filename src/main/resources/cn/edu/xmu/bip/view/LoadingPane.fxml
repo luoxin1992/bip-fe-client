@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+<HBox xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
+      alignment="CENTER_RIGHT" prefHeight="75.0" spacing="12.0"
+      fx:id="hbLoading" fx:controller="cn.edu.xmu.bip.presenter.LoadingPanePresenter">
+    <ProgressIndicator fx:id="piLoading" prefHeight="25.0" prefWidth="25.0"/>
+    <Label fx:id="lblLoading" text="加载状态显示区域" textFill="#808080" textOverrun="WORD_ELLIPSIS">
+        <font>
+            <Font size="24.0"/>
+        </font>
+    </Label>
+</HBox>
