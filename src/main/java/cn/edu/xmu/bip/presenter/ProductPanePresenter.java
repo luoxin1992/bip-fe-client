@@ -4,10 +4,13 @@
 package cn.edu.xmu.bip.presenter;
 
 import cn.edu.xmu.bip.util.FontUtil;
-import cn.edu.xmu.bip.util.MeasurementUtil;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.DoubleBinding;
+import javafx.beans.binding.ObjectBinding;
+import javafx.beans.property.DoubleProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
@@ -25,10 +28,12 @@ import javafx.scene.paint.Stop;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
+import javafx.scene.text.Font;
 import javafx.util.Duration;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.concurrent.Callable;
 
 /**
  * 启动界面-产品信息
@@ -39,11 +44,13 @@ import java.util.ResourceBundle;
 public class ProductPanePresenter implements Initializable {
     private static final double PANE_WIDTH_FACTOR = (double) 1;
     private static final double PANE_HEIGHT_FACTOR = (double) 7 / 8;
-    private static final double IMAGE_HEIGHT_FACTOR = (double) 2 / 5;
-    private static final double LABEL_HEIGHT_FACTOR = (double) 1 / 7;
+    //产品LOGO为父布局高的2/5
+    private static final double LOGO_HEIGHT_FACTOR = (double) 2 / 5;
+    //产品名称为父布局高的1/7
+    private static final double NAME_HEIGHT_FACTOR = (double) 1 / 7;
 
     @FXML
-    private StackPane spProduct;
+    private StackPane spParent;
     @FXML
     private Pane paneAnimation;
     @FXML
@@ -53,21 +60,31 @@ public class ProductPanePresenter implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        double paneWidth = MeasurementUtil.getNodeWidthByFactor(PANE_WIDTH_FACTOR);
-        double paneHeight = MeasurementUtil.getNodeHeightByFactor(PANE_HEIGHT_FACTOR);
-        spProduct.setPrefWidth(paneWidth);
-        spProduct.setPrefHeight(paneHeight);
+        Group animation = createBubbleAnimation(spParent.prefWidthProperty(), spParent.prefHeightProperty());
+        paneAnimation.getChildren().add(animation);
+        paneAnimation.prefWidthProperty().bind(spParent.widthProperty());
+        paneAnimation.prefHeightProperty().bind(spParent.heightProperty());
 
-        paneAnimation.getChildren().add(bubbleAnimation(paneWidth, paneHeight));
+        DoubleBinding logoHeightBinding = Bindings.multiply(spParent.heightProperty(), LOGO_HEIGHT_FACTOR);
+        ivLogo.fitHeightProperty().bind(logoHeightBinding);
 
-        double imageHeight = MeasurementUtil.getNodeSizeInParentByFactor(paneHeight, IMAGE_HEIGHT_FACTOR);
-        ivLogo.setFitHeight(imageHeight);
-
-        double labelHeight = MeasurementUtil.getNodeSizeInParentByFactor(paneHeight, LABEL_HEIGHT_FACTOR);
-        lblName.setFont(FontUtil.loadFont(labelHeight, true));
+        Callable<Font> nameFont = () -> FontUtil.loadFont(spParent.getHeight() * NAME_HEIGHT_FACTOR, true);
+        ObjectBinding<Font> nameFontBinding = Bindings.createObjectBinding(nameFont, spParent.heightProperty());
+        lblName.fontProperty().bind(nameFontBinding);
     }
 
-    private Group bubbleAnimation(double width, double height) {
+    /**
+     * 创建(覆盖在产品信息之下的)气泡动画
+     *
+     * @param widthProperty  动画区域宽属性
+     * @param heightProperty 动画区域高属性
+     * @return 动画区域
+     */
+    private Group createBubbleAnimation(DoubleProperty widthProperty, DoubleProperty heightProperty) {
+        double width = widthProperty.doubleValue();
+        double height = heightProperty.doubleValue();
+
+        //彩色渐变
         Rectangle colors = new Rectangle(width, height,
                 new LinearGradient(0.0, 1.0, 1.0, 0.0, true, CycleMethod.NO_CYCLE,
                         new Stop(0.00, Color.web("#f8bd55")),
@@ -79,7 +96,10 @@ public class ProductPanePresenter implements Initializable {
                         new Stop(0.86, Color.web("#ef504c")),
                         new Stop(1.00, Color.web("#f2660f"))));
         colors.setBlendMode(BlendMode.OVERLAY);
+        colors.widthProperty().bind(widthProperty);
+        colors.heightProperty().bind(heightProperty);
 
+        //模糊圆圈
         Group circles = new Group();
         circles.setEffect(new BoxBlur(10, 10, 3));
         for (int i = 0; i < 50; i++) {
@@ -89,6 +109,11 @@ public class ProductPanePresenter implements Initializable {
             circle.setStrokeWidth(4);
             circles.getChildren().add(circle);
         }
+
+        //黑色蒙版
+        Rectangle black = new Rectangle(width, height, Color.BLACK);
+        black.widthProperty().bind(widthProperty);
+        black.heightProperty().bind(heightProperty);
 
         Timeline timeline = new Timeline();
         timeline.setAutoReverse(true);
@@ -107,6 +132,6 @@ public class ProductPanePresenter implements Initializable {
         }
         timeline.play();
 
-        return new Group(new Group(new Rectangle(width, height, Color.BLACK), circles), colors);
+        return new Group(new Group(black, circles), colors);
     }
 }

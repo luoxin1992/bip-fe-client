@@ -7,13 +7,14 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-<StackPane xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
-           prefHeight="525.0" prefWidth="1024.0"
-           fx:id="spProduct" fx:controller="cn.edu.xmu.bip.presenter.ProductPanePresenter">
-    <Pane fx:id="paneAnimation"/>
-    <VBox alignment="CENTER" prefHeight="200.0" StackPane.alignment="CENTER">
+<StackPane xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1"
+           minHeight="-Infinity" minWidth="-Infinity" maxHeight="-Infinity" maxWidth="-Infinity"
+           prefWidth="1024.0" prefHeight="525.0"
+           fx:id="spParent" fx:controller="cn.edu.xmu.bip.presenter.ProductPanePresenter">
+    <Pane fx:id="paneAnimation" StackPane.alignment="CENTER"/>
+    <VBox alignment="CENTER" StackPane.alignment="CENTER">
         <ImageView fx:id="ivLogo" fitHeight="210.0" pickOnBounds="true" preserveRatio="true">
-            <Image url="@../image/welcome/product-logo.png"/>
+            <Image url="@../image/splash/product-logo.png"/>
         </ImageView>
         <Label fx:id="lblName" text="服务型窗口业务交互平台" textFill="WHITE">
             <font>

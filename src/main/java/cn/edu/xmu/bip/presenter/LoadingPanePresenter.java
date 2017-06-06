@@ -4,44 +4,52 @@
 package cn.edu.xmu.bip.presenter;
 
 import cn.edu.xmu.bip.util.FontUtil;
-import cn.edu.xmu.bip.util.MeasurementUtil;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.DoubleBinding;
+import javafx.beans.binding.ObjectBinding;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.HBox;
+import javafx.scene.text.Font;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.concurrent.Callable;
 
 /**
- * 欢迎界面-加载进度
+ * 启动界面-加载进度
  *
  * @author luoxin
  * @version 2017-6-4
  */
 public class LoadingPanePresenter implements Initializable {
-    private static final double PANE_HEIGHT_FACTOR = (double) 1 / 8;
-    private static final double PROGRESS_RADIUS_FACTOR = (double) 1 / 3;
-    private static final double LABEL_SIZE_FACTOR = (double) 1 / 3;
+    //Loading指示器和状态文本间距为父布局高的1/15
+    private static final double PARENT_MARGIN_FACTOR = (double) 1 / 15;
+    //Loading指示器宽高皆为父布局高的1/3
+    private static final double LOADING_RADIUS_FACTOR = (double) 1 / 3;
+    //状态文本字体为父布局高的1/3
+    private static final double STATUS_FONT_FACTOR = (double) 1 / 3;
 
     @FXML
-    private HBox hbLoading;
+    private HBox hbParent;
     @FXML
     private ProgressIndicator piLoading;
     @FXML
-    private Label lblLoading;
+    private Label lblStatus;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        double paneHeight = MeasurementUtil.getNodeHeightByFactor(PANE_HEIGHT_FACTOR);
-        hbLoading.setPrefHeight(paneHeight);
+        DoubleBinding parentSpacingBinding = Bindings.multiply(hbParent.heightProperty(), PARENT_MARGIN_FACTOR);
+        hbParent.spacingProperty().bind(parentSpacingBinding);
 
-        double progressRadius = MeasurementUtil.getNodeSizeInParentByFactor(paneHeight, PROGRESS_RADIUS_FACTOR);
-        piLoading.setPrefWidth(progressRadius);
-        piLoading.setPrefHeight(progressRadius);
+        DoubleBinding indicatorRadiusBinding = Bindings.multiply(hbParent.heightProperty(), LOADING_RADIUS_FACTOR);
+        piLoading.prefWidthProperty().bind(indicatorRadiusBinding);
+        piLoading.prefHeightProperty().bind(indicatorRadiusBinding);
 
-        double labelHeight = MeasurementUtil.getNodeSizeInParentByFactor(paneHeight, LABEL_SIZE_FACTOR);
-        lblLoading.setFont(FontUtil.loadFont(labelHeight, false));
+        Callable<Font> statusFont = () -> FontUtil.loadFont(hbParent.getHeight() * STATUS_FONT_FACTOR, false);
+        ObjectBinding<Font> statusFontBinding = Bindings.createObjectBinding(statusFont, hbParent.heightProperty());
+        lblStatus.fontProperty().bind(statusFontBinding);
     }
 }
