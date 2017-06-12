@@ -54,7 +54,8 @@ public class UserPanePresenter implements Initializable {
         vbParent.spacingProperty().bind(parentSpacingBinding);
 
         Callable<Insets> parentPadding = () -> new Insets(vbParent.getHeight() * PARENT_PADDING_FACTOR);
-        ObjectBinding<Insets> parentPaddingBinding = Bindings.createObjectBinding(parentPadding, vbParent.heightProperty());
+        ObjectBinding<Insets> parentPaddingBinding =
+                Bindings.createObjectBinding(parentPadding, vbParent.heightProperty());
         vbParent.paddingProperty().bind(parentPaddingBinding);
 
         DoubleBinding photoHeightBinding = Bindings.multiply(vbParent.heightProperty(), PHOTO_HEIGHT_FACTOR);

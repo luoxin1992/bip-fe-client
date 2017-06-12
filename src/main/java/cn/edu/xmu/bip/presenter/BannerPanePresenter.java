@@ -81,7 +81,8 @@ public class BannerPanePresenter implements Initializable {
 
         //底部用于装饰的矩形
         Callable<Double> rectDecoratorHeight = () -> Math.rint(apParent.getHeight() * DECORATOR_HEIGHT_FACTOR);
-        DoubleBinding rectDecoratorHeightBinding = Bindings.createDoubleBinding(rectDecoratorHeight, apParent.heightProperty());
+        DoubleBinding rectDecoratorHeightBinding =
+                Bindings.createDoubleBinding(rectDecoratorHeight, apParent.heightProperty());
         rectDecorator.widthProperty().bind(apParent.widthProperty());
         rectDecorator.heightProperty().bind(rectDecoratorHeightBinding);
 

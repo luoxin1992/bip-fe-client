@@ -16,7 +16,7 @@
         <Image url="@../image/main/message-no-image.png"/>
     </ImageView>
     <ScrollPane fx:id="spExtra" stylesheets="@../css/common.css" hbarPolicy="NEVER" vbarPolicy="NEVER">
-        <Label fx:id="lblExtra" alignment="CENTER" textFill="#ffffff" textOverrun="WORD_ELLIPSIS">
+        <Label fx:id="lblExtra" alignment="CENTER" textFill="#ffffff">
             <font>
                 <Font size="64.0"/>
             </font>

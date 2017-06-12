@@ -20,7 +20,7 @@ import java.util.ResourceBundle;
  * @version 2017-5-27
  */
 public class PartnerPanePresenter implements Initializable {
-    //合作商图片为父布局高的4/5
+    //合作商图片为父布局高的2/3
     private static final double PARTNER_HEIGHT_FACTOR = (double) 2 / 3;
 
     @FXML

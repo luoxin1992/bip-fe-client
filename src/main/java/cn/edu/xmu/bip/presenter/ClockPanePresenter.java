@@ -11,6 +11,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
@@ -19,6 +20,7 @@ import javafx.scene.text.Font;
 import javafx.scene.transform.Rotate;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.Callable;
 
@@ -40,8 +42,8 @@ public class ClockPanePresenter implements Initializable {
     //长、短刻度长度为钟面半径的1/10、1/20、宽度为钟面半径的1/30
     private static final double LONG_SCALE_LENGTH_FACTOR = (double) 1 / 10;
     private static final double SHORT_SCALE_LENGTH_FACTOR = (double) 1 / 20;
-    private static final double SCALE_WIDTH_FACTOR = (double) 1 / 30;
-    //时针、分针、秒针长度为钟面半径的5/10、7/10、9/10，宽度为钟面半径的3/50、2/50、3/50
+    private static final double SCALE_STROKE_WIDTH_FACTOR = (double) 1 / 30;
+    //时针、分针、秒针长度为钟面半径的4/10、5/10、8/10，宽度为钟面半径的3/50、2/50、3/50
     private static final double HOUR_HAND_LENGTH_FACTOR = (double) 4 / 10;
     private static final double MINUTE_HAND_LENGTH_FACTOR = (double) 6 / 10;
     private static final double SECOND_HAND_LENGTH_FACTOR = (double) 8 / 10;
@@ -76,8 +78,8 @@ public class ClockPanePresenter implements Initializable {
         vbParent.spacingProperty().bind(parentSpacingBinding);
 
         Callable<Insets> parentPadding = () -> new Insets(vbParent.getHeight() * PARENT_PADDING_FACTOR);
-        ObjectBinding<Insets> parentPaddingBinding = Bindings.createObjectBinding(parentPadding, vbParent
-                .heightProperty());
+        ObjectBinding<Insets> parentPaddingBinding =
+                Bindings.createObjectBinding(parentPadding, vbParent.heightProperty());
         vbParent.paddingProperty().bind(parentPaddingBinding);
 
         DoubleBinding faceRadiusBinding = Bindings.multiply(vbParent.heightProperty(), FACE_RADIUS_FACTOR).divide(2);
@@ -94,30 +96,30 @@ public class ClockPanePresenter implements Initializable {
         cirSpindle.radiusProperty().bind(spindleRadiusBinding);
 
         //时针长度和宽度
-        DoubleBinding hourHandLengthBinding = Bindings.multiply(cirFace.radiusProperty(), HOUR_HAND_LENGTH_FACTOR)
-                .multiply(-1);
+        DoubleBinding hourHandLengthBinding =
+                Bindings.multiply(cirFace.radiusProperty(), HOUR_HAND_LENGTH_FACTOR).multiply(-1);
         lnHour.endYProperty().bind(hourHandLengthBinding);
 
-        DoubleBinding hourHandStrokeWidthBinding = Bindings.multiply(cirFace.radiusProperty(),
-                HOUR_HAND_STROKE_WIDTH_FACTOR);
+        DoubleBinding hourHandStrokeWidthBinding =
+                Bindings.multiply(cirFace.radiusProperty(), HOUR_HAND_STROKE_WIDTH_FACTOR);
         lnHour.strokeWidthProperty().bind(hourHandStrokeWidthBinding);
 
         //分针长度和宽度
-        DoubleBinding minuteHandLengthBinding = Bindings.multiply(cirFace.radiusProperty(), MINUTE_HAND_LENGTH_FACTOR)
-                .multiply(-1);
+        DoubleBinding minuteHandLengthBinding =
+                Bindings.multiply(cirFace.radiusProperty(), MINUTE_HAND_LENGTH_FACTOR).multiply(-1);
         lnMinute.endYProperty().bind(minuteHandLengthBinding);
 
-        DoubleBinding minuteHandStrokeWidthBinding = Bindings.multiply(cirFace.radiusProperty(),
-                MINUTE_HAND_STROKE_WIDTH_FACTOR);
+        DoubleBinding minuteHandStrokeWidthBinding =
+                Bindings.multiply(cirFace.radiusProperty(), MINUTE_HAND_STROKE_WIDTH_FACTOR);
         lnMinute.strokeWidthProperty().bind(minuteHandStrokeWidthBinding);
 
         //秒针长度和宽度
-        DoubleBinding secondHandLengthBinding = Bindings.multiply(cirFace.radiusProperty(), SECOND_HAND_LENGTH_FACTOR)
-                .multiply(-1);
+        DoubleBinding secondHandLengthBinding =
+                Bindings.multiply(cirFace.radiusProperty(), SECOND_HAND_LENGTH_FACTOR).multiply(-1);
         lnSecond.endYProperty().bind(secondHandLengthBinding);
 
-        DoubleBinding secondHandStrokeWidthBinding = Bindings.multiply(cirFace.radiusProperty(),
-                SECOND_HAND_STROKE_WIDTH_FACTOR);
+        DoubleBinding secondHandStrokeWidthBinding =
+                Bindings.multiply(cirFace.radiusProperty(), SECOND_HAND_STROKE_WIDTH_FACTOR);
         lnSecond.strokeWidthProperty().bind(secondHandStrokeWidthBinding);
 
         Callable<Font> datetimeFont = () ->
@@ -131,20 +133,16 @@ public class ClockPanePresenter implements Initializable {
      * 重绘钟面刻度
      */
     private void repaintScale() {
-        grpScale.getChildren().clear();
-
+        List<Node> nodes = grpScale.getChildren();
         for (int i = 0; i < 60; i++) {
-            Line line;
+            Line line = (Line) nodes.get(i);
             if (i % 5 == 0) {
-                line = new Line(0, -cirFace.getRadius() + cirFace.getRadius() * LONG_SCALE_LENGTH_FACTOR,
-                        0, -cirFace.getRadius());
+                line.setStartY(-cirFace.getRadius() + cirFace.getRadius() * LONG_SCALE_LENGTH_FACTOR);
             } else {
-                line = new Line(0, -cirFace.getRadius() + cirFace.getRadius() * SHORT_SCALE_LENGTH_FACTOR,
-                        0, -cirFace.getRadius());
+                line.setStartY(-cirFace.getRadius() + cirFace.getRadius() * SHORT_SCALE_LENGTH_FACTOR);
             }
-            line.setStrokeWidth(cirFace.getRadius() * SCALE_WIDTH_FACTOR);
-            line.getTransforms().add(new Rotate(i * 6));
-            grpScale.getChildren().add(line);
+            line.setEndY(-cirFace.getRadius());
+            line.setStrokeWidth(cirFace.getRadius() * SCALE_STROKE_WIDTH_FACTOR);
         }
     }
 
@@ -157,15 +155,12 @@ public class ClockPanePresenter implements Initializable {
      */
     private void repaintHand(int hour, int minute, int second) {
         double hourDegree = (hour % 12 + minute / (double) 60 + second / (double) 3600) * 30;
-        lnHour.getTransforms().clear();
-        lnHour.getTransforms().add(new Rotate(hourDegree));
+        ((Rotate) lnHour.getTransforms().get(0)).setAngle(hourDegree);
 
         double minuteDegree = (minute + second / (double) 60) * 6;
-        lnMinute.getTransforms().clear();
-        lnMinute.getTransforms().add(new Rotate(minuteDegree));
+        ((Rotate) lnMinute.getTransforms().get(0)).setAngle(minuteDegree);
 
         double secondDegree = second * 6;
-        lnSecond.getTransforms().clear();
-        lnSecond.getTransforms().add(new Rotate(secondDegree));
+        ((Rotate) lnSecond.getTransforms().get(0)).setAngle(secondDegree);
     }
 }

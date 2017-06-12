@@ -7,29 +7,24 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 /**
- * 主界面-客户信息
+ * 主界面-窗口
  *
  * @author luoxin
  * @version 2017-6-5
  */
-public class UserInfoModel {
+public class CounterModel {
     /**
-     * 客户编号
+     * 窗口编号
      */
     private StringProperty number;
     /**
-     * 客户姓名
+     * 窗口名称
      */
     private StringProperty name;
-    /**
-     * 客户照片(URL)
-     */
-    private StringProperty photo;
 
-    public UserInfoModel() {
+    public CounterModel() {
         number = new SimpleStringProperty();
         name = new SimpleStringProperty();
-        photo = new SimpleStringProperty();
     }
 
     public String getNumber() {
@@ -54,17 +49,5 @@ public class UserInfoModel {
 
     public void setName(String name) {
         this.name.set(name);
-    }
-
-    public String getPhoto() {
-        return photo.get();
-    }
-
-    public StringProperty photoProperty() {
-        return photo;
-    }
-
-    public void setPhoto(String photo) {
-        this.photo.set(photo);
     }
 }

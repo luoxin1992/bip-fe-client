@@ -8,17 +8,16 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.beans.binding.Bindings;
-import javafx.beans.binding.DoubleBinding;
 import javafx.beans.binding.ObjectBinding;
 import javafx.beans.property.DoubleProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.effect.BlendMode;
 import javafx.scene.effect.BoxBlur;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -43,31 +42,22 @@ import java.util.concurrent.Callable;
  * @version 2017-6-4
  */
 public class ProductPanePresenter implements Initializable {
-    private static final double PANE_WIDTH_FACTOR = (double) 1;
-    private static final double PANE_HEIGHT_FACTOR = (double) 7 / 8;
-    //产品LOGO为父布局高的2/5
-    private static final double LOGO_HEIGHT_FACTOR = (double) 2 / 5;
-    //产品名称为父布局高的1/7
-    private static final double NAME_HEIGHT_FACTOR = (double) 1 / 7;
+    //产品名称为父布局高的1/6
+    private static final double NAME_HEIGHT_FACTOR = (double) 1 / 6;
 
     @FXML
     private StackPane spParent;
     @FXML
     private Pane paneAnimation;
     @FXML
-    private ImageView ivLogo;
-    @FXML
     private Label lblName;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        Group animation = createBubbleAnimation(spParent.prefWidthProperty(), spParent.prefHeightProperty());
+        Group animation = createBubbleAnimation(paneAnimation.prefWidthProperty(), paneAnimation.prefHeightProperty());
         paneAnimation.getChildren().add(animation);
         paneAnimation.prefWidthProperty().bind(spParent.widthProperty());
         paneAnimation.prefHeightProperty().bind(spParent.heightProperty());
-
-        DoubleBinding logoHeightBinding = Bindings.multiply(spParent.heightProperty(), LOGO_HEIGHT_FACTOR);
-        ivLogo.fitHeightProperty().bind(logoHeightBinding);
 
         Callable<Font> nameFont = () -> FontUtil.loadFont(spParent.getHeight() * NAME_HEIGHT_FACTOR, true);
         ObjectBinding<Font> nameFontBinding = Bindings.createObjectBinding(nameFont, spParent.heightProperty());
@@ -113,22 +103,21 @@ public class ProductPanePresenter implements Initializable {
         black.widthProperty().bind(widthProperty);
         black.heightProperty().bind(heightProperty);
 
-        //动画一旦开始就不能改变参数，将关键帧区域设为屏幕大小防止动画播放过程中窗口大小变化造成动画错位
-        double width = Screen.getPrimary().getBounds().getWidth();
-        double height = Screen.getPrimary().getBounds().getHeight();
+        Rectangle2D screen = Screen.getPrimary().getBounds();
         //动画
         Timeline timeline = new Timeline();
         timeline.setAutoReverse(true);
         timeline.setCycleCount(Timeline.INDEFINITE);
         for (Node circle : circles.getChildren()) {
             timeline.getKeyFrames().addAll(
+                    //动画一旦开始就不能改变参数，将关键帧区域设为屏幕大小，防止动画播放过程中窗口大小变化造成动画错位
                     new KeyFrame(Duration.ZERO,
-                            new KeyValue(circle.translateXProperty(), Math.random() * width),
-                            new KeyValue(circle.translateYProperty(), Math.random() * height)
+                            new KeyValue(circle.translateXProperty(), Math.random() * screen.getWidth()),
+                            new KeyValue(circle.translateYProperty(), Math.random() * screen.getHeight())
                     ),
                     new KeyFrame(new Duration(30000),
-                            new KeyValue(circle.translateXProperty(), Math.random() * width),
-                            new KeyValue(circle.translateYProperty(), Math.random() * height)
+                            new KeyValue(circle.translateXProperty(), Math.random() * screen.getWidth()),
+                            new KeyValue(circle.translateYProperty(), Math.random() * screen.getHeight())
                     )
             );
         }

@@ -6,10 +6,10 @@
 <?import javafx.scene.text.Font?>
 <HBox xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1"
       minHeight="-Infinity" minWidth="-Infinity" maxHeight="-Infinity" maxWidth="-Infinity"
-      prefHeight="75.0" prefWidth="102.0" alignment="CENTER_RIGHT" spacing="5.0"
+      prefHeight="75.0" alignment="CENTER_RIGHT" spacing="5.0"
       fx:id="hbParent" fx:controller="cn.edu.xmu.bip.presenter.LoadingPanePresenter">
-    <ProgressIndicator fx:id="piLoading" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="25.0"/>
-    <Label fx:id="lblStatus" minHeight="-Infinity" minWidth="-Infinity" text="请稍候" textFill="#808080">
+    <ProgressIndicator fx:id="piLoading" prefHeight="25.0" prefWidth="25.0"/>
+    <Label fx:id="lblStatus" text="请稍候" textFill="#808080">
         <font>
             <Font size="24.0"/>
         </font>
