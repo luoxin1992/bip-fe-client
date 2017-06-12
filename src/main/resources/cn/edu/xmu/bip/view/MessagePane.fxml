@@ -1,20 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-<VBox xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1"
-      fx:id="vbMessage" fx:controller="cn.edu.xmu.bip.presenter.MessagePanePresenter"
-      alignment="CENTER" prefHeight="525.0" prefWidth="683.0"
-      style="-fx-background-color: rgba(255, 255, 255, 0.5); -fx-background-radius: 16;">
-    <ImageView fx:id="ivMessage" fitHeight="393.75" fitWidth="512.0" pickOnBounds="true" preserveRatio="true">
+<VBox xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1"
+      minWidth="-Infinity" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+      alignment="CENTER" prefHeight="525.0" prefWidth="683.0" spacing="32.8125"
+      style="-fx-background-radius: 12; -fx-background-insets: 8; -fx-background-color: rgba(255, 255, 255, 0.5);"
+      fx:id="vbParent" fx:controller="cn.edu.xmu.bip.presenter.MessagePanePresenter">
+    <ImageView fx:id="ivImage" fitHeight="360.9375" fitWidth="469.33" pickOnBounds="true" preserveRatio="true">
         <Image url="@../image/main/message-no-image.png"/>
     </ImageView>
-    <Label fx:id="lblMessage" alignment="CENTER" wrapText="true" textOverrun="WORD_ELLIPSIS" text="消息内容显示区域">
-        <font>
-            <Font size="72.0"/>
-        </font>
-    </Label>
+    <ScrollPane fx:id="spExtra" stylesheets="@../css/common.css" hbarPolicy="NEVER" vbarPolicy="NEVER">
+        <Label fx:id="lblExtra" alignment="CENTER" textFill="#ffffff" textOverrun="WORD_ELLIPSIS">
+            <font>
+                <Font size="64.0"/>
+            </font>
+        </Label>
+    </ScrollPane>
+    <padding>
+        <Insets bottom="32.8125" left="32.8125" right="32.8125" top="32.8125"/>
+    </padding>
 </VBox>

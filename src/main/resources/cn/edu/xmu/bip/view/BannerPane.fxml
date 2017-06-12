@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -7,37 +9,38 @@
 <?import javafx.scene.shape.Polygon?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
 <AnchorPane xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1"
-            fx:id="apBanner" fx:controller="cn.edu.xmu.bip.presenter.BannerPanePresenter"
-            prefHeight="75.0" prefWidth="1024.0" style="-fx-background-color: rgba(255, 255, 255, 0.0);">
-    <HBox fx:id="hbCompany" alignment="CENTER_LEFT" spacing="10.0"
-          AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0">
+            maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+            prefHeight="75.0" prefWidth="1024.0"
+            fx:id="apParent" fx:controller="cn.edu.xmu.bip.presenter.BannerPanePresenter">
+    <HBox fx:id="hbCompany" alignment="CENTER_LEFT" prefHeight="75.0" spacing="10.0">
         <ImageView fx:id="ivCompany" fitHeight="50.0" pickOnBounds="true" preserveRatio="true">
             <Image url="@../image/main/company-unknown.png"/>
         </ImageView>
-        <Text fx:id="txtCompany" fill="#ffffff" text="公司名称显示区域">
+        <Label fx:id="lblCompany" textFill="#ffffff" textOverrun="CLIP">
             <font>
                 <Font size="48.0"/>
             </font>
-        </Text>
+        </Label>
+        <padding>
+            <Insets left="10.0"/>
+        </padding>
     </HBox>
-    <Rectangle fx:id="rectNarrow" fill="#87c400" height="5.0" width="1024.0"
-               AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"/>
-    <Rectangle fx:id="rectWide" fill="#87c400" height="25.0" width="289.0"
-               AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0"/>
-    <Polygon fx:id="polyShelter" fill="#57068c">
-        <points>735.0</points>
-        <points>70.0</points>
-        <points>735.0</points>
-        <points>50.0</points>
-        <points>755.0</points>
-        <points>50.0</points>
-    </Polygon>
-    <Text fx:id="txtProduct" fill="#ffffff" text="服务型窗口业务交互平台"
+    <Rectangle fx:id="rectDecorator" fill="#87c400" height="5.0" width="1024.0" AnchorPane.bottomAnchor="0.0"/>
+    <HBox minHeight="-Infinity" minWidth="-Infinity" style="-fx-background-color: #87c400;"
           AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0">
-        <font>
-            <Font size="24.0"/>
-        </font>
-    </Text>
+        <Polygon fx:id="polyShelter" fill="#57068c">
+            <points>0.0</points>
+            <points>0.0</points>
+            <points>19.0</points>
+            <points>0.0</points>
+            <points>0.0</points>
+            <points>19.0</points>
+        </Polygon>
+        <Label fx:id="lblProduct" text="服务型窗口业务交互平台" textFill="#ffffff">
+            <font>
+                <Font size="24.0"/>
+            </font>
+        </Label>
+    </HBox>
 </AnchorPane>

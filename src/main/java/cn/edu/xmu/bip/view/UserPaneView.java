@@ -6,10 +6,10 @@ package cn.edu.xmu.bip.view;
 import com.airhacks.afterburner.views.FXMLView;
 
 /**
- * 主界面-窗口信息
+ * 主界面-客户
  *
  * @author luoxin
- * @version 2017-5-30
+ * @version 2017-5-29
  */
-public class CounterInfoPaneView extends FXMLView {
+public class UserPaneView extends FXMLView {
 }

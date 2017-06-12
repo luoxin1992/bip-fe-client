@@ -29,6 +29,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Font;
+import javafx.stage.Screen;
 import javafx.util.Duration;
 
 import java.net.URL;
@@ -81,11 +82,8 @@ public class ProductPanePresenter implements Initializable {
      * @return 动画区域
      */
     private Group createBubbleAnimation(DoubleProperty widthProperty, DoubleProperty heightProperty) {
-        double width = widthProperty.doubleValue();
-        double height = heightProperty.doubleValue();
-
         //彩色渐变
-        Rectangle colors = new Rectangle(width, height,
+        Rectangle colors = new Rectangle(widthProperty.doubleValue(), heightProperty.doubleValue(),
                 new LinearGradient(0.0, 1.0, 1.0, 0.0, true, CycleMethod.NO_CYCLE,
                         new Stop(0.00, Color.web("#f8bd55")),
                         new Stop(0.14, Color.web("#c0fe56")),
@@ -111,10 +109,14 @@ public class ProductPanePresenter implements Initializable {
         }
 
         //黑色蒙版
-        Rectangle black = new Rectangle(width, height, Color.BLACK);
+        Rectangle black = new Rectangle(widthProperty.doubleValue(), heightProperty.doubleValue(), Color.BLACK);
         black.widthProperty().bind(widthProperty);
         black.heightProperty().bind(heightProperty);
 
+        //动画一旦开始就不能改变参数，将关键帧区域设为屏幕大小防止动画播放过程中窗口大小变化造成动画错位
+        double width = Screen.getPrimary().getBounds().getWidth();
+        double height = Screen.getPrimary().getBounds().getHeight();
+        //动画
         Timeline timeline = new Timeline();
         timeline.setAutoReverse(true);
         timeline.setCycleCount(Timeline.INDEFINITE);

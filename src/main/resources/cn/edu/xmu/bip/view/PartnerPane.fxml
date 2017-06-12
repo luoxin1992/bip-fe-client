@@ -5,21 +5,21 @@
 <?import javafx.scene.layout.HBox?>
 <HBox xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1"
       minHeight="-Infinity" minWidth="-Infinity" maxHeight="-Infinity" maxWidth="-Infinity"
-      alignment="CENTER_LEFT" prefWidth="709" prefHeight="75.0"
+      alignment="CENTER_LEFT" prefWidth="592.0" prefHeight="75.0"
       fx:id="hbParent" fx:controller="cn.edu.xmu.bip.presenter.PartnerPanePresenter">
-    <ImageView fx:id="ivCrossmatch" fitHeight="60.0" pickOnBounds="true" preserveRatio="true">
+    <ImageView fx:id="ivCrossmatch" fitHeight="50.0" pickOnBounds="true" preserveRatio="true">
         <Image url="@../image/splash/partner-crossmatch.png"/>
     </ImageView>
-    <ImageView fx:id="ivDivider1" fitHeight="60.0" pickOnBounds="true" preserveRatio="true">
+    <ImageView fx:id="ivDivider1" fitHeight="50.0" pickOnBounds="true" preserveRatio="true">
         <Image url="@../image/splash/partner-divider.png"/>
     </ImageView>
-    <ImageView fx:id="ivIflytek" fitHeight="60.0" pickOnBounds="true" preserveRatio="true">
+    <ImageView fx:id="ivIflytek" fitHeight="50.0" pickOnBounds="true" preserveRatio="true">
         <Image url="@../image/splash/partner-iflytek.png"/>
     </ImageView>
-    <ImageView fx:id="ivDivider2" fitHeight="60.0" pickOnBounds="true" preserveRatio="true">
+    <ImageView fx:id="ivDivider2" fitHeight="50.0" pickOnBounds="true" preserveRatio="true">
         <Image url="@../image/splash/partner-divider.png"/>
     </ImageView>
-    <ImageView fx:id="ivMtyun" fitHeight="60.0" pickOnBounds="true" preserveRatio="true">
+    <ImageView fx:id="ivMtyun" fitHeight="50.0" pickOnBounds="true" preserveRatio="true">
         <Image url="@../image/splash/partner-mtyun.png"/>
     </ImageView>
 </HBox>
