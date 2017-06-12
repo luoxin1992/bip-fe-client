@@ -16,18 +16,25 @@ import java.util.Map;
  */
 public class FontUtil {
     //常规字体为冬青黑体W3，加粗字体为冬青黑体W6
-    private static final String REGULAR_FONT_NAME = "../font/Hiragino-Sans-GB-W3.ttf";
-    private static final String BOLD_FONT_NAME = "../font/Hiragino-Sans-GB-W6.ttf";
-    //最小字体大小为16像素，其他字体大小亦为8的整数倍
+    private static final String REGULAR_FONT_FAMILY = "Hiragino Sans GB W3";
+    private static final String BOLD_FONT_FAMILY = "Hiragino Sans GB W6";
+    private static final String REGULAR_FONT_FILENAME = "../font/Hiragino-Sans-GB-W3.ttf";
+    private static final String BOLD_FONT_FILENAME = "../font/Hiragino-Sans-GB-W6.ttf";
+    //最小字体大小为16点，其他字体大小亦为8的整数倍
     private static final int MIN_FONT_SIZE = 16;
     private static final int BASE_FONT_SIZE = 8;
 
     private static Map<Integer, Font> regularFonts;
     private static Map<Integer, Font> boldFonts;
+    private static boolean installLocally;
 
     static {
         regularFonts = new HashMap<>();
         boldFonts = new HashMap<>();
+        //尝试从本地加载所需字体，检查本地已安装字体中是否包括所需的2种字体
+        installLocally = Font.getFamilies().stream()
+                .filter(family -> family.equals(REGULAR_FONT_FAMILY) || family.equals(BOLD_FONT_FAMILY))
+                .count() == 2;
     }
 
     private FontUtil() {
@@ -44,13 +51,23 @@ public class FontUtil {
         int size = getMaxSize(parentHeight);
         if (boldFont) {
             if (!boldFonts.containsKey(size)) {
-                Font font = Font.loadFont(FontUtil.class.getResourceAsStream(BOLD_FONT_NAME), size);
+                Font font;
+                if (installLocally) {
+                    font = Font.font(BOLD_FONT_FAMILY, size);
+                } else {
+                    font = Font.loadFont(FontUtil.class.getResourceAsStream(BOLD_FONT_FILENAME), size);
+                }
                 boldFonts.put(size, font);
             }
             return boldFonts.get(size);
         } else {
             if (!regularFonts.containsKey(size)) {
-                Font font = Font.loadFont(FontUtil.class.getResourceAsStream(REGULAR_FONT_NAME), size);
+                Font font;
+                if (installLocally) {
+                    font = Font.font(REGULAR_FONT_FAMILY, size);
+                } else {
+                    font = Font.loadFont(FontUtil.class.getResourceAsStream(REGULAR_FONT_FILENAME), size);
+                }
                 regularFonts.put(size, font);
             }
             return regularFonts.get(size);
