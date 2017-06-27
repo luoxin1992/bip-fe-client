@@ -1,9 +1,8 @@
 /*
  * Copyright © 2017 Xiamen University. All Rights Reserved.
  */
-package cn.edu.xmu.bip.dao.impl;
+package cn.edu.xmu.bip.dao;
 
-import cn.edu.xmu.bip.dao.IMessageDAO;
 import cn.edu.xmu.bip.domain.MessageDO;
 import cn.edu.xmu.bip.exception.ClientException;
 import cn.edu.xmu.bip.exception.ClientExceptionEnum;
@@ -14,15 +13,22 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
+ * 消息日志DAO
+ *
  * @author luoxin
  * @version 2017-6-13
  */
-public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO {
+public class MessageDAO extends BaseDAO {
     private static final String SQL_INSERT = "INSERT INTO tbl_message(type, body, timestamp) VALUES (?, ?, ?)";
     private static final String SQL_SELECT = "SELECT id, type, body, timestamp FROM tbl_message WHERE id = ? AND status = 0";
     private static final String SQL_SELECT_BY = "SELECT id, type, body, timestamp FROM tbl_message WHERE {0} AND status = 0 ORDER BY timestamp DESC";
 
-    @Override
+    /**
+     * 插入
+     *
+     * @param domain 试题
+     * @throws SQLException 执行数据库操作时出错
+     */
     public void insert(MessageDO domain) throws SQLException {
         int insertRowId = super.insert(SQL_INSERT, domain.getType(), domain.getBody(), domain.getTimestamp());
         if (insertRowId <= 0) {
@@ -30,7 +36,13 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO {
         }
     }
 
-    @Override
+    /**
+     * 按ID查询
+     *
+     * @param id ID
+     * @return 查询结果
+     * @throws SQLException 执行数据库操作时出错
+     */
     public MessageDO select(int id) throws SQLException {
         MessageDO domain = super.select(MessageDO.class, SQL_SELECT, id);
         if (domain == null) {
@@ -39,7 +51,13 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO {
         return domain;
     }
 
-    @Override
+    /**
+     * 条件查询
+     *
+     * @param conditions 查询条件
+     * @return 查询结果
+     * @throws SQLException 执行数据库操作时出错
+     */
     public List<MessageDO> selectBy(Map<String, Map<String, String>> conditions) throws SQLException {
         String whereClause = conditions.entrySet().stream()
                 .flatMap(entry -> entry.getValue().keySet().stream()
