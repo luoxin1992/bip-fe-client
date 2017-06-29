@@ -7,7 +7,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 /**
- * 主界面-客户
+ * 主界面-客户信息
  *
  * @author luoxin
  * @version 2017-6-5

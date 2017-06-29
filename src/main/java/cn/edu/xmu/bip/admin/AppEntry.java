@@ -10,7 +10,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 /**
- * 管理工具-应用入口
+ * 管理工具入口
  *
  * @author luoxin
  * @version 2017-5-28
@@ -21,6 +21,7 @@ public class AppEntry extends Application {
         AdminSceneView view = new AdminSceneView();
         Scene scene = new Scene(view.getView());
         stage.setResizable(false);
+        stage.setTitle("管理工具");
         stage.setScene(scene);
         stage.show();
     }
