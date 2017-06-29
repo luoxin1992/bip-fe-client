@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.shape.Polygon?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+<AnchorPane xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1"
+            maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+            prefHeight="75.0" prefWidth="1024.0"
+            fx:id="apParent" fx:controller="cn.edu.xmu.bip.main.presenter.BannerPanePresenter">
+    <HBox fx:id="hbCompany" alignment="CENTER_LEFT" prefHeight="75.0" spacing="10.0">
+        <ImageView fx:id="ivCompany" fitHeight="50.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="@/image/company-unknown.png"/>
+        </ImageView>
+        <Label fx:id="lblCompany" textFill="#ffffff" textOverrun="CLIP">
+            <font>
+                <Font size="48.0"/>
+            </font>
+        </Label>
+        <padding>
+            <Insets left="10.0"/>
+        </padding>
+    </HBox>
+    <Rectangle fx:id="rectDecorator" fill="#87c400" height="5.0" width="1024.0" AnchorPane.bottomAnchor="0.0"/>
+    <HBox minHeight="-Infinity" minWidth="-Infinity" style="-fx-background-color: #87c400;"
+          AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0">
+        <Polygon fx:id="polyShelter" fill="#57068c">
+            <points>0.0</points>
+            <points>0.0</points>
+            <points>19.0</points>
+            <points>0.0</points>
+            <points>0.0</points>
+            <points>19.0</points>
+        </Polygon>
+        <Label fx:id="lblProduct" text="服务型窗口业务交互平台" textFill="#ffffff">
+            <font>
+                <Font size="24.0"/>
+            </font>
+        </Label>
+    </HBox>
+</AnchorPane>

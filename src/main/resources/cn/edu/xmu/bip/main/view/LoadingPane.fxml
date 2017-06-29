@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+<HBox xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1"
+      minHeight="-Infinity" minWidth="-Infinity" maxHeight="-Infinity" maxWidth="-Infinity"
+      prefHeight="75.0" alignment="CENTER_RIGHT" spacing="5.0"
+      fx:id="hbParent" fx:controller="cn.edu.xmu.bip.main.presenter.LoadingPanePresenter">
+    <ProgressIndicator fx:id="piLoading" prefHeight="25.0" prefWidth="25.0"/>
+    <Label fx:id="lblStatus" text="请稍候" textFill="#808080">
+        <font>
+            <Font size="24.0"/>
+        </font>
+    </Label>
+</HBox>

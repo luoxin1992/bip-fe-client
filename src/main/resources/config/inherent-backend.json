@@ -1,0 +1,14 @@
+{
+  "rd": {
+    "api": "http://localhost:8081",
+    "ws": "ws://localhost:8081"
+  },
+  "qa": {
+    "api": "https://qa.lx1992.com.cn/bip-data",
+    "ws": "wss://qa.lx1992.com.cn/bip-data"
+  },
+  "prod": {
+    "api": "",
+    "ws": ""
+  }
+}
