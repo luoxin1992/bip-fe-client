@@ -19,6 +19,10 @@ public class FingerprintEnrollMessage extends BaseMessage {
      */
     private Integer times;
     /**
+     * 超时时间
+     */
+    private Integer timeout;
+    /**
      * 资源(长度应等于采集次数)
      */
     private List<BaseMessageResource> resources;
@@ -33,6 +37,14 @@ public class FingerprintEnrollMessage extends BaseMessage {
 
     public void setTimes(Integer times) {
         this.times = times;
+    }
+
+    public Integer getTimeout() {
+        return timeout;
+    }
+
+    public void setTimeout(Integer timeout) {
+        this.timeout = timeout;
     }
 
     public List<BaseMessageResource> getResources() {

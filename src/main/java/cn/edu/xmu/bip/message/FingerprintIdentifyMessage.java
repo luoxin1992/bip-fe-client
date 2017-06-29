@@ -13,12 +13,24 @@ import cn.edu.xmu.bip.meta.MessageTypeEnum;
  */
 public class FingerprintIdentifyMessage extends BaseMessage {
     /**
+     * 超时时间
+     */
+    private Integer timeout;
+    /**
      * 资源
      */
     private BaseMessageResource resource;
 
     public FingerprintIdentifyMessage() {
         super(MessageTypeEnum.FINGERPRINT_IDENTIFY);
+    }
+
+    public Integer getTimeout() {
+        return timeout;
+    }
+
+    public void setTimeout(Integer timeout) {
+        this.timeout = timeout;
     }
 
     public BaseMessageResource getResource() {
