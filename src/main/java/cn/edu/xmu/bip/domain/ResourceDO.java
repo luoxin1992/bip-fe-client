@@ -3,8 +3,7 @@
  */
 package cn.edu.xmu.bip.domain;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
+import cn.com.lx1992.lib.client.base.domain.BaseDO;
 
 /**
  * 资源Domain
@@ -12,11 +11,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * @author luoxin
  * @version 2017-6-12
  */
-public class ResourceDO {
-    /**
-     * ID
-     */
-    private Integer id;
+public class ResourceDO extends BaseDO {
     /**
      * 类型
      */
@@ -37,18 +32,6 @@ public class ResourceDO {
      * MD5
      */
     private String md5;
-    /**
-     * 时间戳
-     */
-    private String timestamp;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public String getType() {
         return type;
@@ -88,18 +71,5 @@ public class ResourceDO {
 
     public void setMd5(String md5) {
         this.md5 = md5;
-    }
-
-    public String getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(String timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
     }
 }

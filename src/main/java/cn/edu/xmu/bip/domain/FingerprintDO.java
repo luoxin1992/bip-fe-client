@@ -3,8 +3,7 @@
  */
 package cn.edu.xmu.bip.domain;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
+import cn.com.lx1992.lib.client.base.domain.BaseDO;
 
 /**
  * 指纹(扫描仪)日志Domain
@@ -12,11 +11,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * @author luoxin
  * @version 2017-6-12
  */
-public class FingerprintDO {
-    /**
-     * ID
-     */
-    private Integer id;
+public class FingerprintDO extends BaseDO {
     /**
      * 类型
      */
@@ -25,18 +20,6 @@ public class FingerprintDO {
      * 内容
      */
     private String content;
-    /**
-     * 时间戳
-     */
-    private String timestamp;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public String getType() {
         return type;
@@ -53,18 +36,4 @@ public class FingerprintDO {
     public void setContent(String content) {
         this.content = content;
     }
-
-    public String getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(String timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
-    }
-
 }

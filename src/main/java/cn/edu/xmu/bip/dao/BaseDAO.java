@@ -3,7 +3,7 @@
  */
 package cn.edu.xmu.bip.dao;
 
-import cn.edu.xmu.bip.util.NativeUtil;
+import cn.com.lx1992.lib.client.util.NativeUtil;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
