@@ -1,9 +1,9 @@
 /*
  * Copyright © 2017 Xiamen University. All Rights Reserved.
  */
-package cn.edu.xmu.bip.admin;
+package cn.edu.xmu.bip.ui.admin;
 
-import cn.edu.xmu.bip.admin.view.AdminSceneView;
+import cn.edu.xmu.bip.ui.admin.view.AdminSceneView;
 import com.airhacks.afterburner.injection.Injector;
 import javafx.application.Application;
 import javafx.scene.Scene;

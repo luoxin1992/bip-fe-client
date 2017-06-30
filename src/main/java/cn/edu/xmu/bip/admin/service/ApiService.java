@@ -6,10 +6,12 @@ package cn.edu.xmu.bip.admin.service;
 import cn.com.lx1992.lib.client.base.constant.BaseFieldNameConstant;
 import cn.com.lx1992.lib.client.util.HttpUtil;
 import cn.com.lx1992.lib.client.util.JsonUtil;
+import cn.com.lx1992.lib.client.util.PreferencesUtil;
+import cn.edu.xmu.bip.admin.constant.AdminConstant;
 import cn.edu.xmu.bip.admin.constant.ApiConstant;
 import cn.edu.xmu.bip.admin.param.CounterCreateParam;
 import cn.edu.xmu.bip.admin.param.CounterModifyParam;
-import cn.edu.xmu.bip.admin.param.CounterQuerySimpleParam;
+import cn.edu.xmu.bip.admin.param.CounterQueryBindParam;
 import cn.edu.xmu.bip.admin.result.CounterQuerySimpleResult;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.slf4j.Logger;
@@ -28,24 +30,28 @@ import java.util.function.Consumer;
 public class ApiService {
     private final Logger logger = LoggerFactory.getLogger(ApiService.class);
 
-    private static final String API_BASE_URL = "http://localhost:8081";
+    private static final String API_BASE_URL;
 
-    void invokeCounterQuerySimple(CounterQuerySimpleParam param, Consumer<CounterQuerySimpleResult> onSuccess,
-                                  Consumer<Map.Entry<Integer, String>> onFailure, Consumer<String> onError) {
+    static {
+        API_BASE_URL = PreferencesUtil.get(AdminConstant.BACKEND_CURRENT_API_PREF);
+    }
+
+    void invokeCounterQueryBind(CounterQueryBindParam param, Consumer<CounterQuerySimpleResult> onSuccess,
+                                Consumer<Map.Entry<Integer, String>> onFailure, Consumer<String> onError) {
         invokeBackendApi(API_BASE_URL + ApiConstant.COUNTER_QUERY_BIND,
                 JsonUtil.toJson(param), CounterQuerySimpleResult.class, onSuccess, onFailure, onError);
     }
 
-    public void invokeCounterCreate(CounterCreateParam param, Consumer<Void> onSuccess, Consumer<String> onFailure) {
+    void invokeCounterCreate(CounterCreateParam param, Consumer<Void> onSuccess, Consumer<String> onFailure) {
         invokeBackendApi(API_BASE_URL + ApiConstant.COUNTER_CREATE,
                 JsonUtil.toJson(param), Void.class,
-                onSuccess, status -> onFailure.accept(status.getValue() + "(" + status.getKey() + ")"), onFailure);
+                onSuccess, status -> onFailure.accept(status.getValue()), onFailure);
     }
 
     void invokeCounterModify(CounterModifyParam param, Consumer<Void> onSuccess, Consumer<String> onFailure) {
         invokeBackendApi(API_BASE_URL + ApiConstant.COUNTER_MODIFY,
                 JsonUtil.toJson(param), Void.class,
-                onSuccess, status -> onFailure.accept(status.getValue() + "(" + status.getKey() + ")"), onFailure);
+                onSuccess, status -> onFailure.accept(status.getValue()), onFailure);
     }
 
     private <T> void invokeBackendApi(String api, String request,

@@ -1,12 +1,12 @@
 /*
  * Copyright © 2017 Xiamen University. All Rights Reserved.
  */
-package cn.edu.xmu.bip.admin.view;
+package cn.edu.xmu.bip.ui.admin.view;
 
 import com.airhacks.afterburner.views.FXMLView;
 
 /**
- * 开发者界面
+ * 管理工具
  *
  * @author luoxin
  * @version 2017-6-26
