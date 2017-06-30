@@ -5,9 +5,9 @@ package cn.edu.xmu.bip.ui.admin.presenter;
 
 import cn.com.lx1992.lib.client.dto.NICAddressDTO;
 import cn.com.lx1992.lib.client.util.NativeUtil;
-import cn.edu.xmu.bip.admin.constant.AdminConstant;
-import cn.edu.xmu.bip.admin.service.ConfigService;
-import cn.edu.xmu.bip.common.constant.CommonConstant;
+import cn.edu.xmu.bip.constant.AdminConstant;
+import cn.edu.xmu.bip.service.ConfigService;
+import cn.edu.xmu.bip.constant.CommonConstant;
 import cn.edu.xmu.bip.ui.admin.model.BackendModel;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;

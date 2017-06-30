@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
-
-<?import javafx.scene.layout.BorderPane?>
-<BorderPane xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1"
-            prefHeight="600.0" prefWidth="1024.0"
-            fx:id="bpSplash" fx:controller="cn.edu.xmu.bip.main.presenter.SplashScenePresenter">
-</BorderPane>

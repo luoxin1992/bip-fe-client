@@ -4,8 +4,8 @@
 package cn.edu.xmu.bip.ui.admin.presenter;
 
 import cn.com.lx1992.lib.client.util.DateTimeUtil;
-import cn.edu.xmu.bip.admin.constant.AdminConstant;
-import cn.edu.xmu.bip.admin.service.DataBrowsingService;
+import cn.edu.xmu.bip.constant.AdminConstant;
+import cn.edu.xmu.bip.service.DataBrowsingService;
 import cn.edu.xmu.bip.ui.admin.model.FingerprintLogModel;
 import cn.edu.xmu.bip.ui.admin.model.MessageLogModel;
 import cn.edu.xmu.bip.ui.admin.model.ResourceModel;

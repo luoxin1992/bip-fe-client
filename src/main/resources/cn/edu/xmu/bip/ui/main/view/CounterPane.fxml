@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<VBox xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1"
+      maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+      alignment="CENTER" prefHeight="525.0" prefWidth="683.0" spacing="65.625"
+      style="-fx-background-radius: 12; -fx-background-insets: 8; -fx-background-color: rgba(255, 255, 255, 0.5);"
+      fx:id="vbParent" fx:controller="cn.edu.xmu.bip.ui.main.presenter.CounterPanePresenter">
+    <Label fx:id="lblNumber" alignment="CENTER" textOverrun="CLIP" textFill="#ffffff" text=":-)">
+        <font>
+            <Font size="192.0"/>
+        </font>
+    </Label>
+    <Label fx:id="lblName" alignment="CENTER" text="欢迎光临" textOverrun="CLIP" textFill="#ffffff">
+        <font>
+            <Font size="128.0"/>
+        </font>
+    </Label>
+    <padding>
+        <Insets bottom="65.625" left="65.625" right="65.625" top="65.625"/>
+    </padding>
+</VBox>
