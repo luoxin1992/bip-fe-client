@@ -3,11 +3,9 @@
  */
 package cn.edu.xmu.bip.dao;
 
+import cn.com.lx1992.lib.client.util.DateTimeUtil;
 import cn.edu.xmu.bip.domain.ResourceDO;
-import cn.edu.xmu.bip.exception.ClientException;
-import cn.edu.xmu.bip.exception.ClientExceptionEnum;
 
-import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -17,95 +15,83 @@ import java.util.List;
  * @version 2017-6-13
  */
 public class ResourceDAO extends BaseDAO {
-    private static final String SQL_COUNT = "SELECT COUNT(1) FROM tbl_resource " +
-            "WHERE timestamp > ? AND timestamp < ? AND status = 0";
-    private static final String SQL_SELECT = "SELECT id, type, url, path, filename, md5, timestamp FROM tbl_resource " +
-            "WHERE timestamp > ? AND timestamp < ? AND status = 0 ORDER BY timestamp DESC LIMIT ?, ?";
-    private static final String SQL_SELECT_ID = "SELECT id FROM tbl_resource " +
-            "WHERE type = ? AND filename = ? AND status = 0";
-    private static final String SQL_INSERT = "INSERT INTO tbl_resource(type, url, path, filename, md5, timestamp) " +
+    private static final String SQL_COUNT = "SELECT COUNT(1) " +
+            "FROM tbl_resource WHERE timestamp > ? AND timestamp < ? AND status != 0 ORDER BY timestamp DESC";
+    private static final String SQL_SELECT = "SELECT id, type, url, path, md5, timestamp, status " +
+            "FROM tbl_resource WHERE timestamp > ? AND timestamp < ? AND status != 0 ORDER BY timestamp DESC";
+    private static final String SQL_SELECT_URL = "SELECT id, type, url, path, md5, timestamp, status " +
+            "FROM tbl_resource WHERE url = ? AND status != 0 LIMIT 1";
+    private static final String SQL_SELECT_STATUS = "SELECT id, type, url, path, md5, timestamp, status " +
+            "FROM tbl_resource WHERE status = ?";
+    private static final String SQL_INSERT = "INSERT INTO tbl_resource(type, url, path, md5, timestamp, status) " +
             "VALUES (?, ?, ?, ?, ?, ?)";
-    private static final String SQL_UPDATE = "UPDATE tbl_resource " +
-            "SET type = ?, url = ?, path = ?, filename = ?, md5 = ?, timestamp = ? WHERE id = ? AND status = 0";
-    private static final String SQL_DELETE = "UPDATE tbl_resource SET status = 1 WHERE id = ? AND status = 0";
+    private static final String SQL_UPDATE_STATUS = "UPDATE tbl_resource SET timestamp = ? AND status = ? " +
+            "WHERE id = ? AND status != 0";
 
     /**
      * 统计
      *
      * @param minTimestamp 时间戳下限
      * @param maxTimestamp 时间戳上限
-     * @return 查询结果
-     * @throws SQLException 执行数据库操作时出错
+     * @return 统计结果
      */
-    public int count(long minTimestamp, long maxTimestamp) throws SQLException {
+    public int count(long minTimestamp, long maxTimestamp) {
         return super.count(SQL_COUNT, minTimestamp, maxTimestamp);
     }
 
     /**
-     * 条件查询
+     * 查询
      *
      * @param minTimestamp 时间戳下限
      * @param maxTimestamp 时间戳上限
-     * @param offset       页起始
-     * @param row          页长度
      * @return 查询结果
-     * @throws SQLException 执行数据库操作时出错
      */
-    public List<ResourceDO> select(long minTimestamp, long maxTimestamp, int offset, int row) throws SQLException {
-        return super.selectBatch(ResourceDO.class, SQL_SELECT, minTimestamp, maxTimestamp, offset, row);
+    public List<ResourceDO> select(long minTimestamp, long maxTimestamp) {
+        return super.selectBatch(ResourceDO.class, SQL_SELECT, minTimestamp, maxTimestamp);
     }
 
     /**
-     * 查询ID
+     * 根据url查询
      *
-     * @param type     类型
-     * @param filename 文件名
-     * @return ID
-     * @throws SQLException 执行数据库操作时出错
+     * @param url 下载地址
+     * @return 查询结果
      */
-    public int selectId(String type, String filename) throws SQLException {
-        ResourceDO domain = super.select(ResourceDO.class, SQL_SELECT_ID, type, filename);
-        return domain != null ? domain.getId() : -1;
+    public ResourceDO selectUrl(String url) {
+        return select(ResourceDO.class, SQL_SELECT_URL, url);
+    }
+
+    /**
+     * 根据status查询
+     *
+     * @param status 状态
+     * @return 查询结果
+     */
+    public List<ResourceDO> selectStatus(int status) {
+        return selectBatch(ResourceDO.class, SQL_SELECT_STATUS, status);
     }
 
     /**
      * 插入
      *
-     * @param domain 实体
-     * @throws SQLException 执行数据库操作时出错
+     * @param type   类型
+     * @param url    下载地址
+     * @param path   保存路径
+     * @param md5    MD5
+     * @param status 状态
      */
-    public void insert(ResourceDO domain) throws SQLException {
-        int id = super.insert(SQL_INSERT, domain.getType(), domain.getUrl(), domain.getPath(),
-                domain.getFilename(), domain.getMd5(), domain.getTimestamp());
-        if (id <= 0) {
-            throw new ClientException(ClientExceptionEnum.DATABASE_INSERT_ERROR);
-        }
+    public void insert(String type, String url, String path, String md5, Integer status) {
+        long timestamp = DateTimeUtil.getNowEpochSecond();
+        super.insert(SQL_INSERT, type, url, path, md5, timestamp, status);
     }
 
     /**
-     * 更新
+     * 更新状态
      *
-     * @param domain 实体
-     * @throws SQLException 执行数据库操作时出错
+     * @param id     ID
+     * @param status 状态
      */
-    public void update(ResourceDO domain) throws SQLException {
-        int rows = super.update(SQL_UPDATE, domain.getType(), domain.getUrl(), domain.getPath(),
-                domain.getFilename(), domain.getMd5(), domain.getTimestamp(), domain.getId());
-        if (rows <= 0) {
-            throw new ClientException(ClientExceptionEnum.DATABASE_UPDATE_ERROR);
-        }
-    }
-
-    /**
-     * 逻辑删除
-     *
-     * @param id ID
-     * @throws SQLException 执行数据库操作时出错
-     */
-    public void delete(int id) throws SQLException {
-        int rowsAffect = super.update(SQL_DELETE, id);
-        if (rowsAffect <= 0) {
-            throw new ClientException(ClientExceptionEnum.DATABASE_DELETE_ERROR);
-        }
+    public void updateStatus(int id, int status) {
+        long timestamp = DateTimeUtil.getNowEpochSecond();
+        super.update(SQL_UPDATE_STATUS, timestamp, status, id);
     }
 }

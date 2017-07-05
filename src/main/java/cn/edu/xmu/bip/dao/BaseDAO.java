@@ -4,6 +4,8 @@
 package cn.edu.xmu.bip.dao;
 
 import cn.com.lx1992.lib.client.util.NativeUtil;
+import cn.edu.xmu.bip.exception.ClientException;
+import cn.edu.xmu.bip.exception.ClientExceptionEnum;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
@@ -32,30 +34,35 @@ class BaseDAO {
     private static final String DB_DRIVER = "org.sqlite.JDBC";
     private static final String DB_URL;
     private static final String DB_URL_PREFIX = "jdbc:sqlite:";
-    private static final String DB_URL_SUFFIX = File.separatorChar + "db" + File.separatorChar + "bip.db";
-    private static final String INITIAL_SQL_FILE = "/config/init.sql";
+    private static final String DB_FILE_NAME = "bip.db";
+    private static final String INIT_FILE_NAME = "/file/init.sql";
 
     private static final Logger logger = LoggerFactory.getLogger(BaseDAO.class);
 
     static {
         //拼接数据库路径
-        DB_URL = DB_URL_PREFIX + NativeUtil.getAppDataPath() + DB_URL_SUFFIX;
+        try {
+            DB_URL = DB_URL_PREFIX + NativeUtil.getAppDataDirectoryPath("db") + File.separatorChar + DB_FILE_NAME;
+        } catch (IOException e) {
+            logger.error("create db directory failure", e);
+            throw new ClientException(ClientExceptionEnum.DB_CREATE_DIR_ERROR);
+        }
         //加载数据库驱动
         try {
             Class.forName(DB_DRIVER);
         } catch (ClassNotFoundException e) {
-            logger.error("error loading db driver", e);
-            System.exit(-1);
+            logger.error("load db driver failure", e);
+            throw new ClientException(ClientExceptionEnum.DB_LOAD_DRIVER_ERROR);
         }
         //初始化数据库
         try {
             initialDb();
         } catch (IOException e) {
-            logger.error("error reading initialization sql file", e);
-            System.exit(-1);
+            logger.error("read initialization sql file failure", e);
+            throw new ClientException(ClientExceptionEnum.DB_READ_INIT_FILE_ERROR);
         } catch (SQLException e) {
-            logger.error("error executing initialization sql statement", e);
-            System.exit(-1);
+            logger.error("execute initialization sql statement failure", e);
+            throw new ClientException(ClientExceptionEnum.DB_EXEC_INIT_STMT_ERROR);
         }
     }
 
@@ -66,7 +73,7 @@ class BaseDAO {
      * @throws SQLException 执行数据库操作时出错
      */
     private static void initialDb() throws IOException, SQLException {
-        try (InputStream is = BaseDAO.class.getResourceAsStream(INITIAL_SQL_FILE);
+        try (InputStream is = BaseDAO.class.getResourceAsStream(INIT_FILE_NAME);
              BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
             String sql;
             while ((sql = br.readLine()) != null) {
@@ -84,13 +91,18 @@ class BaseDAO {
      *
      * @param sql      SQL语句
      * @param bindArgs 绑定参数
-     * @return 插入行的ID
-     * @throws SQLException 执行数据库操作时出错
      */
-    Integer insert(String sql, Object... bindArgs) throws SQLException {
+    void insert(String sql, Object... bindArgs) {
         try (Connection connection = DriverManager.getConnection(DB_URL)) {
-            return new QueryRunner().
+            int id = new QueryRunner().
                     insert(connection, sql, new ScalarHandler<Integer>("last_insert_rowid()"), bindArgs);
+            if (id <= 0) {
+                logger.error("invalid last insert row id {}", id);
+                throw new ClientException(ClientExceptionEnum.DB_INSERT_ERROR);
+            }
+        } catch (SQLException e) {
+            logger.error("execute INSERT statement \"{0}\" failure", sql, e);
+            throw new ClientException(ClientExceptionEnum.DB_INSERT_ERROR, e);
         }
     }
 
@@ -99,12 +111,17 @@ class BaseDAO {
      *
      * @param sql      SQL语句
      * @param bindArgs 绑定参数
-     * @return 受影响的行数
-     * @throws SQLException 执行数据库操作时出错
      */
-    int update(String sql, Object... bindArgs) throws SQLException {
+    void update(String sql, Object... bindArgs) {
         try (Connection conn = DriverManager.getConnection(DB_URL)) {
-            return new QueryRunner().update(conn, sql, bindArgs);
+            int rows = new QueryRunner().update(conn, sql, bindArgs);
+            if (rows <= 0) {
+                logger.error("invalid number of rows affected {}", rows);
+                throw new ClientException(ClientExceptionEnum.DB_UPDATE_ERROR);
+            }
+        } catch (SQLException e) {
+            logger.error("execute UPDATE statement \"{0}\" failure", sql, e);
+            throw new ClientException(ClientExceptionEnum.DB_UPDATE_ERROR, e);
         }
     }
 
@@ -114,41 +131,47 @@ class BaseDAO {
      * @param sql      SQL语句
      * @param bindArgs 绑定参数
      * @return 统计结果
-     * @throws SQLException 执行数据库操作时出错
      */
-    int count(String sql, Object... bindArgs) throws SQLException {
+    Integer count(String sql, Object... bindArgs) {
         try (Connection conn = DriverManager.getConnection(DB_URL)) {
             return new QueryRunner().query(conn, sql, new ScalarHandler<Integer>(), bindArgs);
+        } catch (SQLException e) {
+            logger.error("execute SELECT statement \"{0}\" failure", sql, e);
+            throw new ClientException(ClientExceptionEnum.DB_SELECT_ERROR, e);
         }
     }
 
     /**
      * 查询
      *
-     * @param T        查询结果集映射类型
+     * @param T        结果集映射类型
      * @param sql      SQL语句
      * @param bindArgs 绑定参数
      * @return 查询结果
-     * @throws SQLException 执行数据库操作时出错
      */
-    <T> T select(Class<T> T, String sql, Object... bindArgs) throws SQLException {
+    <T> T select(Class<T> T, String sql, Object... bindArgs) {
         try (Connection conn = DriverManager.getConnection(DB_URL)) {
             return new QueryRunner().query(conn, sql, new BeanHandler<>(T), bindArgs);
+        } catch (SQLException e) {
+            logger.error("execute SELECT statement \"{0}\" failure", sql, e);
+            throw new ClientException(ClientExceptionEnum.DB_SELECT_ERROR, e);
         }
     }
 
     /**
      * 批量查询
      *
-     * @param T        查询结果集映射类型
+     * @param T        结果集映射类型
      * @param sql      SQL语句
      * @param bindArgs 绑定参数
      * @return 查询结果
-     * @throws SQLException 执行数据库操作时出错
      */
-    <T> List<T> selectBatch(Class<T> T, String sql, Object... bindArgs) throws SQLException {
+    <T> List<T> selectBatch(Class<T> T, String sql, Object... bindArgs) {
         try (Connection conn = DriverManager.getConnection(DB_URL)) {
             return new QueryRunner().query(conn, sql, new BeanListHandler<>(T), bindArgs);
+        } catch (SQLException e) {
+            logger.error("execute SELECT statement \"{0}\" failure", sql, e);
+            throw new ClientException(ClientExceptionEnum.DB_SELECT_ERROR, e);
         }
     }
 }

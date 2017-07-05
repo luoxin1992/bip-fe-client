@@ -25,10 +25,6 @@ public class ResourceDO extends BaseDO {
      */
     private String path;
     /**
-     * 文件名
-     */
-    private String filename;
-    /**
      * MD5
      */
     private String md5;
@@ -55,14 +51,6 @@ public class ResourceDO extends BaseDO {
 
     public void setPath(String path) {
         this.path = path;
-    }
-
-    public String getFilename() {
-        return filename;
-    }
-
-    public void setFilename(String filename) {
-        this.filename = filename;
     }
 
     public String getMd5() {
