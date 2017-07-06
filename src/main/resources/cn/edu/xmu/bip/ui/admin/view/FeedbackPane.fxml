@@ -18,17 +18,16 @@
         <Label text="1、截取当前界面" AnchorPane.leftAnchor="0.0"/>
         <Button fx:id="btnScreenshot" text="截图" AnchorPane.rightAnchor="0.0"/>
     </AnchorPane>
-    <ImageView fx:id="ivScreenshot" fitHeight="100.0" fitWidth="200.0" pickOnBounds="true"
-               preserveRatio="true"/>
+    <ImageView fx:id="ivScreenshot" fitHeight="100.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true"/>
     <AnchorPane>
         <Label text="2、提取运行日志" AnchorPane.leftAnchor="0.0"/>
-        <Button fx:id="btnExtractLog" text="提取" AnchorPane.rightAnchor="0.0"/>
+        <Button fx:id="btnRuntimeLog" text="提取" AnchorPane.rightAnchor="0.0"/>
     </AnchorPane>
-    <TextArea fx:id="taExtractLog" editable="false" prefHeight="100.0" wrapText="true"/>
+    <TextArea fx:id="taRuntimeLog" editable="false" prefHeight="100.0" wrapText="true"/>
     <AnchorPane>
         <Label text="3、我还有话要说" AnchorPane.leftAnchor="0.0"/>
         <HBox AnchorPane.rightAnchor="0.0">
-            <Label fx:id="lblSuggestionLength" text="0"/>
+            <Label fx:id="lblSuggestion" text="0"/>
             <Label text="/500字"/>
         </HBox>
     </AnchorPane>

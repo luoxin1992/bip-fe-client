@@ -3,13 +3,17 @@
  */
 package cn.edu.xmu.bip.ui.admin.presenter;
 
+import cn.edu.xmu.bip.ui.admin.model.FeedbackModel;
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.ImageView;
+import org.apache.commons.lang3.StringUtils;
 
+import javax.inject.Inject;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -27,45 +31,60 @@ public class FeedbackPresenter implements Initializable {
     @FXML
     private ImageView ivScreenshot;
     @FXML
-    private Button btnExtractLog;
+    private Button btnRuntimeLog;
     @FXML
-    private TextArea taExtractLog;
+    private TextArea taRuntimeLog;
     @FXML
-    private Label lblSuggestionLength;
+    private Label lblSuggestion;
     @FXML
     private TextArea taSuggestion;
     @FXML
     private Button btnSubmit;
 
+    @Inject
+    private FeedbackModel feedbackModel;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        //截图按钮点击事件
-        btnScreenshot.setOnAction(event -> clickScreenshotButton());
-        //提取按钮点击事件
-        btnExtractLog.setOnAction(event -> clickExtractLogButton());
-        //意见建议键入事件
-        taSuggestion.textProperty().addListener((property, oldValue, newValue) ->
-                typeInSuggestion(newValue));
-        //提交按钮点击事件
-        btnSubmit.setOnAction(event -> clickSubmitButton());
+        bindViewModel();
+        bindEvent();
     }
 
-    private void clickScreenshotButton() {
-        //TODO
+    private void bindViewModel() {
+        ivScreenshot.imageProperty().bindBidirectional(feedbackModel.screenshotProperty());
+        taRuntimeLog.textProperty().bindBidirectional(feedbackModel.logProperty());
+        taSuggestion.textProperty().bindBidirectional(feedbackModel.suggestionProperty());
     }
 
-    private void clickExtractLogButton() {
-        //TODO
+    private void bindEvent() {
+        //更新意见建议键入字数
+        lblSuggestion.textProperty().bind(Bindings.createStringBinding(() ->
+                String.valueOf(StringUtils.length(taSuggestion.textProperty().get())), taSuggestion.textProperty()));
+        //限制意见建议键入字数
+        taSuggestion.textProperty().addListener((property, oldValue, newValue) -> typeInSuggestion(newValue));
+        //截图
+        btnScreenshot.setOnAction(event -> takeScreenshot());
+        //提取日志
+        btnRuntimeLog.setOnAction(event -> extractRuntimeLog());
+        //提交反馈
+        btnSubmit.setOnAction(event -> submitFeedback());
     }
 
     private void typeInSuggestion(String text) {
-        lblSuggestionLength.setText(String.valueOf(text.length()));
         if (text.length() >= SUGGESTION_MAX_LENGTH) {
             taSuggestion.setText(text.substring(0, SUGGESTION_MAX_LENGTH));
         }
     }
 
-    private void clickSubmitButton() {
+    private void takeScreenshot() {
+        //TODO
+    }
+
+    private void extractRuntimeLog() {
+        //TODO
+    }
+
+    private void submitFeedback() {
         //TODO
     }
 }

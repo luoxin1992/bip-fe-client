@@ -20,16 +20,6 @@
             <padding>
                 <Insets bottom="16.0" left="16.0" right="16.0" top="16.0"/>
             </padding>
-            <HBox spacing="8.0">
-                <RadioButton fx:id="rbRd" id="rd" text="RD">
-                    <toggleGroup>
-                        <ToggleGroup fx:id="tgEnv"/>
-                    </toggleGroup>
-                </RadioButton>
-                <RadioButton fx:id="rbQa" id="qa" text="QA" toggleGroup="$tgEnv"/>
-                <RadioButton fx:id="rbProd" id="prod" text="PROD" toggleGroup="$tgEnv"/>
-                <RadioButton fx:id="rbCustom" id="custom" text="自定义" toggleGroup="$tgEnv"/>
-            </HBox>
             <GridPane vgap="8.0">
                 <columnConstraints>
                     <ColumnConstraints halignment="RIGHT"/>
@@ -38,13 +28,25 @@
                 <rowConstraints>
                     <RowConstraints/>
                     <RowConstraints/>
+                    <RowConstraints/>
                 </rowConstraints>
+                <Label text="预置环境：" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                <HBox spacing="8.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                    <RadioButton id="rd" text="RD">
+                        <toggleGroup>
+                            <ToggleGroup fx:id="tgPreset"/>
+                        </toggleGroup>
+                    </RadioButton>
+                    <RadioButton id="qa" text="QA" toggleGroup="$tgPreset"/>
+                    <RadioButton id="st" text="ST" toggleGroup="$tgPreset"/>
+                    <RadioButton id="prod" text="PROD" toggleGroup="$tgPreset"/>
+                </HBox>
                 <Label maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-                       text="API：" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-                <TextField fx:id="tfApi" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                       text="API：" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                <TextField fx:id="tfApi" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
                 <Label maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-                       text="WebSocket：" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-                <TextField fx:id="tfWs" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                       text="WebSocket：" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                <TextField fx:id="tfWs" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
             </GridPane>
             <HBox alignment="CENTER_LEFT" spacing="8.0">
                 <Button fx:id="btnSave" text="保存"/>
