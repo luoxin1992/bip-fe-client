@@ -101,13 +101,13 @@ public class VoiceUtil {
     private static void play() {
         mediaPlayer = new MediaPlayer(new Media(Paths.get(playlist.get(index)).toUri().toString()));
         mediaPlayer.setAutoPlay(true);
-        //发生错误或播放完成后调到下一个文件
+        //发生错误或播放完成后跳到下一个文件
         mediaPlayer.setOnError(() -> {
-            logger.error("media file {} playback failure", playlist.get(index), mediaPlayer.getError());
+            logger.error("media file {} playback failed", playlist.get(index), mediaPlayer.getError());
             next();
         });
         mediaPlayer.setOnEndOfMedia(() -> {
-            logger.info("media file {} playback successful", playlist.get(index));
+            logger.info("media file {} playback end", playlist.get(index));
             next();
         });
     }
