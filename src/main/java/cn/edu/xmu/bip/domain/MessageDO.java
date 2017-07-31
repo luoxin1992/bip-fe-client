@@ -6,20 +6,32 @@ package cn.edu.xmu.bip.domain;
 import cn.com.lx1992.lib.client.base.domain.BaseDO;
 
 /**
- * 指纹(扫描仪)日志Domain
+ * 消息Domain
  *
  * @author luoxin
  * @version 2017-6-12
  */
-public class FingerprintLogDO extends BaseDO {
+public class MessageDO extends BaseDO {
+    /**
+     * UID
+     */
+    private Long uid;
     /**
      * 类型
      */
     private String type;
     /**
-     * 内容
+     * 消息体
      */
-    private String content;
+    private String body;
+
+    public Long getUid() {
+        return uid;
+    }
+
+    public void setUid(Long uid) {
+        this.uid = uid;
+    }
 
     public String getType() {
         return type;
@@ -29,11 +41,11 @@ public class FingerprintLogDO extends BaseDO {
         this.type = type;
     }
 
-    public String getContent() {
-        return content;
+    public String getBody() {
+        return body;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setBody(String body) {
+        this.body = body;
     }
 }

@@ -16,17 +16,17 @@ import java.util.List;
  */
 public class ResourceDAO extends BaseDAO {
     private static final String SQL_COUNT = "SELECT COUNT(1) " +
-            "FROM tbl_resource WHERE timestamp > ? AND timestamp < ? AND status != 0 ORDER BY timestamp DESC";
-    private static final String SQL_SELECT = "SELECT id, type, url, path, md5, timestamp, status " +
-            "FROM tbl_resource WHERE timestamp > ? AND timestamp < ? AND status != 0 ORDER BY timestamp DESC";
-    private static final String SQL_SELECT_URL = "SELECT id, type, url, path, md5, timestamp, status " +
-            "FROM tbl_resource WHERE url = ? AND status != 0 LIMIT 1";
-    private static final String SQL_SELECT_STATUS = "SELECT id, type, url, path, md5, timestamp, status " +
-            "FROM tbl_resource WHERE status = ?";
-    private static final String SQL_INSERT = "INSERT INTO tbl_resource(type, url, path, md5, timestamp, status) " +
+            "FROM tbl_resource WHERE timestamp >= ? AND timestamp <= ? AND status = 1";
+    private static final String SQL_QUERY = "SELECT id, type, url, path, length, modify, timestamp " +
+            "FROM tbl_resource WHERE timestamp >= ? AND timestamp <= ? AND status = 1 ORDER BY timestamp DESC";
+    private static final String SQL_SELECT_ALL = "SELECT id, type, url, path, length, modify, timestamp " +
+            "FROM tbl_resource WHERE status = 1";
+    private static final String SQL_SELECT_ONE = "SELECT id, type, url, path, length, modify, timestamp " +
+            "FROM tbl_resource WHERE type = ? AND url = ? AND status = 1 LIMIT 1";
+    private static final String SQL_INSERT = "INSERT INTO tbl_resource(type, url, path, length, modify, timestamp) " +
             "VALUES (?, ?, ?, ?, ?, ?)";
-    private static final String SQL_UPDATE_STATUS = "UPDATE tbl_resource SET timestamp = ? AND status = ? " +
-            "WHERE id = ? AND status != 0";
+    private static final String SQL_DELETE = "UPDATE tbl_resource SET timestamp = ?, status = 0 " +
+            "WHERE id = ? AND status = 1";
 
     /**
      * 统计
@@ -46,28 +46,28 @@ public class ResourceDAO extends BaseDAO {
      * @param maxTimestamp 时间戳上限
      * @return 查询结果
      */
-    public List<ResourceDO> select(long minTimestamp, long maxTimestamp) {
-        return super.selectBatch(ResourceDO.class, SQL_SELECT, minTimestamp, maxTimestamp);
+    public List<ResourceDO> query(long minTimestamp, long maxTimestamp) {
+        return super.selectBatch(ResourceDO.class, SQL_QUERY, minTimestamp, maxTimestamp);
     }
 
     /**
-     * 根据url查询
+     * 查询全部
      *
-     * @param url 下载地址
      * @return 查询结果
      */
-    public ResourceDO selectUrl(String url) {
-        return select(ResourceDO.class, SQL_SELECT_URL, url);
+    public List<ResourceDO> selectAll() {
+        return super.selectBatch(ResourceDO.class, SQL_SELECT_ALL);
     }
 
     /**
-     * 根据status查询
+     * 查询单个
      *
-     * @param status 状态
+     * @param type 类型
+     * @param url  下载地址
      * @return 查询结果
      */
-    public List<ResourceDO> selectStatus(int status) {
-        return selectBatch(ResourceDO.class, SQL_SELECT_STATUS, status);
+    public ResourceDO selectOne(String type, String url) {
+        return super.select(ResourceDO.class, SQL_SELECT_ONE, type, url);
     }
 
     /**
@@ -76,22 +76,21 @@ public class ResourceDAO extends BaseDAO {
      * @param type   类型
      * @param url    下载地址
      * @param path   保存路径
-     * @param md5    MD5
-     * @param status 状态
+     * @param length 文件大小
+     * @param modify 修改时间
      */
-    public void insert(String type, String url, String path, String md5, Integer status) {
+    public void insert(String type, String url, String path, long length, String modify) {
         long timestamp = DateTimeUtil.getNowEpochSecond();
-        super.insert(SQL_INSERT, type, url, path, md5, timestamp, status);
+        super.insert(SQL_INSERT, type, url, path, length, modify, timestamp);
     }
 
     /**
-     * 更新状态
+     * 删除
      *
-     * @param id     ID
-     * @param status 状态
+     * @param id ID
      */
-    public void updateStatus(int id, int status) {
+    public void delete(int id) {
         long timestamp = DateTimeUtil.getNowEpochSecond();
-        super.update(SQL_UPDATE_STATUS, timestamp, status, id);
+        super.update(SQL_DELETE, timestamp, id);
     }
 }

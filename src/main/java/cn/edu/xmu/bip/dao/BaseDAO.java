@@ -41,27 +41,22 @@ class BaseDAO {
 
     static {
         //拼接数据库路径
-        try {
-            DB_URL = DB_URL_PREFIX + NativeUtil.getAppDataDirectoryPath("db") + File.separatorChar + DB_FILE_NAME;
-        } catch (IOException e) {
-            logger.error("create db directory failure", e);
-            throw new ClientException(ClientExceptionEnum.DB_CREATE_DIR_ERROR);
-        }
+        DB_URL = DB_URL_PREFIX + NativeUtil.getAppDataDirectoryPath("db") + File.separatorChar + DB_FILE_NAME;
         //加载数据库驱动
         try {
             Class.forName(DB_DRIVER);
         } catch (ClassNotFoundException e) {
-            logger.error("load db driver failure", e);
+            logger.error("load db driver failed", e);
             throw new ClientException(ClientExceptionEnum.DB_LOAD_DRIVER_ERROR);
         }
         //初始化数据库
         try {
             initialDb();
         } catch (IOException e) {
-            logger.error("read initialization sql file failure", e);
+            logger.error("read initialization sql file failed", e);
             throw new ClientException(ClientExceptionEnum.DB_READ_INIT_FILE_ERROR);
         } catch (SQLException e) {
-            logger.error("execute initialization sql statement failure", e);
+            logger.error("execute initialization sql statement failed", e);
             throw new ClientException(ClientExceptionEnum.DB_EXEC_INIT_STMT_ERROR);
         }
     }
@@ -101,7 +96,7 @@ class BaseDAO {
                 throw new ClientException(ClientExceptionEnum.DB_INSERT_ERROR);
             }
         } catch (SQLException e) {
-            logger.error("execute INSERT statement \"{0}\" failure", sql, e);
+            logger.error("execute INSERT statement ({}) failed", sql, e);
             throw new ClientException(ClientExceptionEnum.DB_INSERT_ERROR, e);
         }
     }
@@ -120,7 +115,7 @@ class BaseDAO {
                 throw new ClientException(ClientExceptionEnum.DB_UPDATE_ERROR);
             }
         } catch (SQLException e) {
-            logger.error("execute UPDATE statement \"{0}\" failure", sql, e);
+            logger.error("execute UPDATE statement ({}) failed", sql, e);
             throw new ClientException(ClientExceptionEnum.DB_UPDATE_ERROR, e);
         }
     }
@@ -136,7 +131,7 @@ class BaseDAO {
         try (Connection conn = DriverManager.getConnection(DB_URL)) {
             return new QueryRunner().query(conn, sql, new ScalarHandler<Integer>(), bindArgs);
         } catch (SQLException e) {
-            logger.error("execute SELECT statement \"{0}\" failure", sql, e);
+            logger.error("execute SELECT statement ({}) failed", sql, e);
             throw new ClientException(ClientExceptionEnum.DB_SELECT_ERROR, e);
         }
     }
@@ -153,7 +148,7 @@ class BaseDAO {
         try (Connection conn = DriverManager.getConnection(DB_URL)) {
             return new QueryRunner().query(conn, sql, new BeanHandler<>(T), bindArgs);
         } catch (SQLException e) {
-            logger.error("execute SELECT statement \"{0}\" failure", sql, e);
+            logger.error("execute SELECT statement ({}) failed", sql, e);
             throw new ClientException(ClientExceptionEnum.DB_SELECT_ERROR, e);
         }
     }
@@ -170,7 +165,7 @@ class BaseDAO {
         try (Connection conn = DriverManager.getConnection(DB_URL)) {
             return new QueryRunner().query(conn, sql, new BeanListHandler<>(T), bindArgs);
         } catch (SQLException e) {
-            logger.error("execute SELECT statement \"{0}\" failure", sql, e);
+            logger.error("execute SELECT statement ({}) failed", sql, e);
             throw new ClientException(ClientExceptionEnum.DB_SELECT_ERROR, e);
         }
     }

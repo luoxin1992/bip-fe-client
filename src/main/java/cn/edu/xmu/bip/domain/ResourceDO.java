@@ -25,9 +25,13 @@ public class ResourceDO extends BaseDO {
      */
     private String path;
     /**
-     * MD5
+     * 文件大小
      */
-    private String md5;
+    private Long length;
+    /**
+     * 修改时间
+     */
+    private String modify;
 
     public String getType() {
         return type;
@@ -53,11 +57,19 @@ public class ResourceDO extends BaseDO {
         this.path = path;
     }
 
-    public String getMd5() {
-        return md5;
+    public Long getLength() {
+        return length;
     }
 
-    public void setMd5(String md5) {
-        this.md5 = md5;
+    public void setLength(Long length) {
+        this.length = length;
+    }
+
+    public String getModify() {
+        return modify;
+    }
+
+    public void setModify(String modify) {
+        this.modify = modify;
     }
 }
