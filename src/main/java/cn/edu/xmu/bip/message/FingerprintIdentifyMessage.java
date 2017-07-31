@@ -3,7 +3,7 @@
  */
 package cn.edu.xmu.bip.message;
 
-import cn.edu.xmu.bip.meta.MessageTypeEnum;
+import java.util.List;
 
 /**
  * 指纹辨识Message
@@ -11,19 +11,15 @@ import cn.edu.xmu.bip.meta.MessageTypeEnum;
  * @author luoxin
  * @version 2017-4-25
  */
-public class FingerprintIdentifyMessage extends BaseMessage {
+public class FingerprintIdentifyMessage extends BaseReceiveMessage {
     /**
      * 超时时间
      */
     private Integer timeout;
     /**
-     * 资源
+     * 附加信息
      */
-    private BaseMessageResource resource;
-
-    public FingerprintIdentifyMessage() {
-        super(MessageTypeEnum.FINGERPRINT_IDENTIFY);
-    }
+    private List<String> extras;
 
     public Integer getTimeout() {
         return timeout;
@@ -33,11 +29,11 @@ public class FingerprintIdentifyMessage extends BaseMessage {
         this.timeout = timeout;
     }
 
-    public BaseMessageResource getResource() {
-        return resource;
+    public List<String> getExtras() {
+        return extras;
     }
 
-    public void setResource(BaseMessageResource resource) {
-        this.resource = resource;
+    public void setExtras(List<String> extras) {
+        this.extras = extras;
     }
 }

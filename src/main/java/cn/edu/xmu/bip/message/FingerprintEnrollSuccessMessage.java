@@ -3,29 +3,23 @@
  */
 package cn.edu.xmu.bip.message;
 
-import cn.edu.xmu.bip.meta.MessageTypeEnum;
-
 /**
  * 指纹登记成功Message
  *
  * @author luoxin
  * @version 2017-4-25
  */
-public class FingerprintEnrollSuccessMessage extends BaseMessage {
+public class FingerprintEnrollSuccessMessage extends BaseReceiveMessage {
     /**
-     * 资源
+     * 附加信息
      */
-    private BaseMessageResource resource;
+    private String extra;
 
-    public FingerprintEnrollSuccessMessage() {
-        super(MessageTypeEnum.FINGERPRINT_ENROLL_SUCCESS);
+    public String getExtra() {
+        return extra;
     }
 
-    public BaseMessageResource getResource() {
-        return resource;
-    }
-
-    public void setResource(BaseMessageResource resource) {
-        this.resource = resource;
+    public void setExtra(String extra) {
+        this.extra = extra;
     }
 }

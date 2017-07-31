@@ -3,8 +3,6 @@
  */
 package cn.edu.xmu.bip.message;
 
-import cn.edu.xmu.bip.meta.MessageTypeEnum;
-
 import java.util.List;
 
 /**
@@ -13,7 +11,11 @@ import java.util.List;
  * @author luoxin
  * @version 2017-4-25
  */
-public class FingerprintEnrollMessage extends BaseMessage {
+public class FingerprintEnrollMessage extends BaseReceiveMessage {
+    /**
+     * 用户ID
+     */
+    private Long userId;
     /**
      * 采集次数
      */
@@ -23,12 +25,16 @@ public class FingerprintEnrollMessage extends BaseMessage {
      */
     private Integer timeout;
     /**
-     * 资源(长度应等于采集次数)
+     * 附加信息
      */
-    private List<BaseMessageResource> resources;
+    private List<String> extras;
 
-    public FingerprintEnrollMessage() {
-        super(MessageTypeEnum.FINGERPRINT_ENROLL);
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public Integer getTimes() {
@@ -47,11 +53,11 @@ public class FingerprintEnrollMessage extends BaseMessage {
         this.timeout = timeout;
     }
 
-    public List<BaseMessageResource> getResources() {
-        return resources;
+    public List<String> getExtras() {
+        return extras;
     }
 
-    public void setResources(List<BaseMessageResource> resources) {
-        this.resources = resources;
+    public void setExtras(List<String> extras) {
+        this.extras = extras;
     }
 }

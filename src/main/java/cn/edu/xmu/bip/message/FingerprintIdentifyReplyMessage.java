@@ -11,7 +11,11 @@ import cn.edu.xmu.bip.meta.MessageTypeEnum;
  * @author luoxin
  * @version 2017-4-25
  */
-public class FingerprintIdentifyReplyMessage extends BaseMessage {
+public class FingerprintIdentifyReplyMessage extends BaseSendMessage {
+    /**
+     * 结果
+     */
+    private String result;
     /**
      * 指纹模型
      */
@@ -19,6 +23,14 @@ public class FingerprintIdentifyReplyMessage extends BaseMessage {
 
     public FingerprintIdentifyReplyMessage() {
         super(MessageTypeEnum.FINGERPRINT_IDENTIFY_REPLY);
+    }
+
+    public String getResult() {
+        return result;
+    }
+
+    public void setResult(String result) {
+        this.result = result;
     }
 
     public String getTemplate() {

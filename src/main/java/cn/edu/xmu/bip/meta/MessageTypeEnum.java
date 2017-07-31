@@ -4,7 +4,6 @@
 package cn.edu.xmu.bip.meta;
 
 import java.util.Arrays;
-import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -14,24 +13,32 @@ import java.util.Optional;
  * @version 2017-4-27
  */
 public enum MessageTypeEnum {
-    BUSINESS_PAUSE("business-pause", "业务暂停受理"),
-    BUSINESS_RESUME("business-resume", "业务恢复受理"),
-    BUSINESS_PROCESS("business-process", "业务正在受理"),
-    BUSINESS_SUCCESS("business-success", "业务受理成功"),
-    BUSINESS_FAILURE("business-failure", "业务受理失败"),
+    UNKNOWN(null, "未知"),
+    //接收的消息
+    //服务控制
+    SERVICE_CANCEL("service-cancel", "取消服务"),
+    SERVICE_PAUSE("service-pause", "暂停服务"),
+    SERVICE_RESUME("service-resume", "恢复服务"),
+    //一般业务
+    GENERAL_BUSINESS_PROCESS("general-business-process", "一般业务受理"),
+    GENERAL_BUSINESS_SUCCESS("general-business-success", "一般业务受理成功"),
+    GENERAL_BUSINESS_FAILURE("general-business-failure", "一般业务受理失败"),
+    //指纹登记
     FINGERPRINT_ENROLL("fingerprint-enroll", "指纹登记"),
-    FINGERPRINT_ENROLL_REPLY("fingerprint-enroll-reply", "指纹登记回复"),
     FINGERPRINT_ENROLL_SUCCESS("fingerprint-enroll-success", "指纹登记成功"),
     FINGERPRINT_ENROLL_FAILURE("fingerprint-enroll-failure", "指纹登记失败"),
-    FINGERPRINT_ENROLL_TIMEOUT("fingerprint-enroll-timeout", "指纹登记超时"),
+    //指纹辨识
     FINGERPRINT_IDENTIFY("fingerprint-identify", "指纹辨识"),
-    FINGERPRINT_IDENTIFY_REPLY("fingerprint-identify-reply", "指纹辨识回复"),
+    FINGERPRINT_IDENTIFY_SUCCESS("fingerprint-identify-success", "指纹辨识成功"),
     FINGERPRINT_IDENTIFY_FAILURE("fingerprint-identify-failure", "指纹辨识失败"),
-    FINGERPRINT_IDENTIFY_TIMEOUT("fingerprint-identify-timeout", "指纹辨识超时"),
-    USER_INFO("user-info", "更新用户信息"),
-    COUNTER_INFO("counter-info", "更新窗口信息"),
-    CLIENT_CLOSE("client-close", "关闭客户端"),
-    UNKNOWN("unknown", "未知");
+    //更新界面
+    UPDATE_COMPANY_INFO("update-company-info", "更新公司信息"),
+    UPDATE_COUNTER_INFO("update-counter-info", "更新窗口信息"),
+    UPDATE_USER_INFO("update-user-info", "更新用户信息"),
+    //发送的消息
+    ACK("ack", "确认"),
+    FINGERPRINT_ENROLL_REPLY("fingerprint-enroll-reply", "指纹登记回复"),
+    FINGERPRINT_IDENTIFY_REPLY("fingerprint-identify-reply", "指纹辨识回复");
 
     private String type;
     private String description;
@@ -49,11 +56,10 @@ public enum MessageTypeEnum {
         return description;
     }
 
-    public static String getDescriptionByType(String type) {
-        Optional<String> result = Arrays.stream(values())
-                .filter(value -> Objects.equals(value.type, type))
-                .map(MessageTypeEnum::getDescription)
+    public static MessageTypeEnum getByType(String type) {
+        Optional<MessageTypeEnum> result = Arrays.stream(values())
+                .filter(value -> value.type.equals(type))
                 .findFirst();
-        return result.orElse(UNKNOWN.getDescription());
+        return result.orElse(UNKNOWN);
     }
 }

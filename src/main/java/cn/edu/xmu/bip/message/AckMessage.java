@@ -6,13 +6,13 @@ package cn.edu.xmu.bip.message;
 import cn.edu.xmu.bip.meta.MessageTypeEnum;
 
 /**
- * 关闭客户端Message
+ * 确认Message
  *
  * @author luoxin
- * @version 2017-4-29
+ * @version 2017-4-25
  */
-public class ClientCloseMessage extends BaseMessage {
-    public ClientCloseMessage() {
-        super(MessageTypeEnum.CLIENT_CLOSE);
+public class AckMessage extends BaseSendMessage {
+    public AckMessage() {
+        super(MessageTypeEnum.ACK);
     }
 }

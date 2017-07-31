@@ -11,7 +11,11 @@ import cn.edu.xmu.bip.meta.MessageTypeEnum;
  * @author luoxin
  * @version 2017-4-25
  */
-public class FingerprintEnrollReplyMessage extends BaseMessage {
+public class FingerprintEnrollReplyMessage extends BaseSendMessage {
+    /**
+     * 状态
+     */
+    private String status;
     /**
      * 指纹模型
      */
@@ -19,6 +23,14 @@ public class FingerprintEnrollReplyMessage extends BaseMessage {
 
     public FingerprintEnrollReplyMessage() {
         super(MessageTypeEnum.FINGERPRINT_ENROLL_REPLY);
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setResult(String status) {
+        this.status = status;
     }
 
     public String getTemplate() {

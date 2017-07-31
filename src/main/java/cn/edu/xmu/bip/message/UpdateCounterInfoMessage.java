@@ -3,31 +3,21 @@
  */
 package cn.edu.xmu.bip.message;
 
-import cn.edu.xmu.bip.meta.MessageTypeEnum;
-
 /**
  * 更新窗口信息Message
  *
  * @author luoxin
  * @version 2017-4-29
  */
-public class CounterInfoMessage extends BaseMessage {
+public class UpdateCounterInfoMessage extends BaseReceiveMessage {
     /**
-     * 窗口编号
+     * 编号
      */
     private String number;
     /**
-     * 窗口名称
+     * 名称
      */
     private String name;
-    /**
-     * 资源
-     */
-    private BaseMessageResource resource;
-
-    public CounterInfoMessage() {
-        super(MessageTypeEnum.COUNTER_INFO);
-    }
 
     public String getNumber() {
         return number;
@@ -43,13 +33,5 @@ public class CounterInfoMessage extends BaseMessage {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public BaseMessageResource getResource() {
-        return resource;
-    }
-
-    public void setResource(BaseMessageResource resource) {
-        this.resource = resource;
     }
 }

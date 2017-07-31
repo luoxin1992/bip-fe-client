@@ -4,12 +4,12 @@
 package cn.edu.xmu.bip.message;
 
 /**
- * 指纹登记失败Message
+ * 业务正在受理Message
  *
  * @author luoxin
  * @version 2017-4-25
  */
-public class FingerprintEnrollFailureMessage extends BaseReceiveMessage {
+public class GeneralBusinessProcessMessage extends BaseReceiveMessage {
     /**
      * 附加信息
      */
