@@ -1,0 +1,2 @@
+CREATE TABLE IF NOT EXISTS tbl_fingerprint(id INTEGER PRIMARY KEY AUTOINCREMENT, event TEXT NOT NULL, extra TEXT NOT NULL, timestamp INTEGER NOT NULL, status INTEGER DEFAULT 1 NOT NULL);
+CREATE INDEX IF NOT EXISTS tbl_fingerprint_idx_timestamp ON tbl_fingerprint (timestamp);
