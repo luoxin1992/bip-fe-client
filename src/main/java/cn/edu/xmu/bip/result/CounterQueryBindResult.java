@@ -9,7 +9,7 @@ import cn.com.lx1992.lib.client.base.result.BaseResult;
  * @author luoxin
  * @version 2017-6-27
  */
-public class CounterQuerySimpleResult extends BaseResult {
+public class CounterQueryBindResult extends BaseResult {
     /**
      * ID
      */
