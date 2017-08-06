@@ -3,7 +3,6 @@
  */
 package cn.edu.xmu.bip.message;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -59,10 +58,6 @@ public class BaseReceiveMessage {
          * 声音(顺序播放列表)
          */
         private List<String> voices;
-
-        public Resource() {
-            voices = new ArrayList<>();
-        }
 
         public String getImage() {
             return image;

@@ -4,6 +4,7 @@
 package cn.edu.xmu.bip.meta;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -20,9 +21,9 @@ public enum MessageTypeEnum {
     SERVICE_PAUSE("service-pause", "暂停服务"),
     SERVICE_RESUME("service-resume", "恢复服务"),
     //一般业务
-    GENERAL_BUSINESS_PROCESS("general-business-process", "一般业务受理"),
-    GENERAL_BUSINESS_SUCCESS("general-business-success", "一般业务受理成功"),
-    GENERAL_BUSINESS_FAILURE("general-business-failure", "一般业务受理失败"),
+    GENERAL_BUSINESS("general-business", "一般业务"),
+    GENERAL_BUSINESS_SUCCESS("general-business-success", "一般业务成功"),
+    GENERAL_BUSINESS_FAILURE("general-business-failure", "一般业务失败"),
     //指纹登记
     FINGERPRINT_ENROLL("fingerprint-enroll", "指纹登记"),
     FINGERPRINT_ENROLL_SUCCESS("fingerprint-enroll-success", "指纹登记成功"),
@@ -58,7 +59,7 @@ public enum MessageTypeEnum {
 
     public static MessageTypeEnum getByType(String type) {
         Optional<MessageTypeEnum> result = Arrays.stream(values())
-                .filter(value -> value.type.equals(type))
+                .filter(value -> Objects.equals(value.type, type))
                 .findFirst();
         return result.orElse(UNKNOWN);
     }

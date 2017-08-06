@@ -6,20 +6,12 @@ package cn.edu.xmu.bip.message;
 import java.util.List;
 
 /**
- * 指纹登记Message
+ * 一般业务Message
  *
  * @author luoxin
  * @version 2017-4-25
  */
-public class FingerprintEnrollMessage extends BaseReceiveMessage {
-    /**
-     * 用户(ID)
-     */
-    private Long user;
-    /**
-     * 采集次数
-     */
-    private Integer times;
+public class GeneralBusinessMessage extends BaseReceiveMessage {
     /**
      * 超时时间
      */
@@ -28,22 +20,6 @@ public class FingerprintEnrollMessage extends BaseReceiveMessage {
      * 附加信息
      */
     private List<String> extras;
-
-    public Long getUser() {
-        return user;
-    }
-
-    public void setUser(Long user) {
-        this.user = user;
-    }
-
-    public Integer getTimes() {
-        return times;
-    }
-
-    public void setTimes(Integer times) {
-        this.times = times;
-    }
 
     public Integer getTimeout() {
         return timeout;

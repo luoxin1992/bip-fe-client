@@ -4,7 +4,7 @@
 package cn.edu.xmu.bip.message;
 
 /**
- * 业务受理成功Message
+ * 一般业务成功Message
  *
  * @author luoxin
  * @version 2017-4-25
