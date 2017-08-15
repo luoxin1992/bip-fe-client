@@ -20,15 +20,15 @@
     </padding>
     <AnchorPane>
         <HBox alignment="CENTER_LEFT" spacing="8.0" AnchorPane.leftAnchor="0">
-            <RadioButton id="fingerprint-log" text="指纹(扫描仪)日志表">
+            <RadioButton id="fingerprint" text="指纹(仪)(日志)表">
                 <toggleGroup>
                     <ToggleGroup fx:id="tgTable"/>
                 </toggleGroup>
             </RadioButton>
-            <RadioButton id="message-log" text="消息日志表" toggleGroup="$tgTable"/>
+            <RadioButton id="message" text="消息(日志)表" toggleGroup="$tgTable"/>
             <RadioButton id="resource" text="资源表" toggleGroup="$tgTable"/>
         </HBox>
-        <Label fx:id="lblHint" textFill="#ff0000" AnchorPane.rightAnchor="0"/>
+        <Label fx:id="lblMessage" textFill="#ff0000" AnchorPane.rightAnchor="0"/>
     </AnchorPane>
     <Separator/>
     <HBox alignment="CENTER_LEFT" spacing="8.0">
@@ -38,31 +38,32 @@
         <DatePicker fx:id="dpEnd" editable="false"/>
         <Button fx:id="btnQuery" text="查询"/>
     </HBox>
-    <TableView fx:id="tvFingerprintLog" managed="false" visible="false">
+    <TableView fx:id="tvFingerprint" managed="false" visible="false">
         <columns>
-            <TableColumn fx:id="tcFingerprintLogId" sortable="false" text="ID"/>
-            <TableColumn fx:id="tcFingerprintLogType" sortable="false" text="Type"/>
-            <TableColumn fx:id="tcFingerprintLogContent" sortable="false" text="Content"/>
-            <TableColumn fx:id="tcFingerprintLogTimestamp" sortable="false" text="Timestamp"/>
+            <TableColumn fx:id="tcFingerprintId" sortable="false" text="#"/>
+            <TableColumn fx:id="tcFingerprintEvent" sortable="false" text="事件"/>
+            <TableColumn fx:id="tcFingerprintExtra" sortable="false" text="附加信息"/>
+            <TableColumn fx:id="tcFingerprintTimestamp" sortable="false" text="时间戳"/>
         </columns>
     </TableView>
-    <TableView fx:id="tvMessageLog" managed="false" visible="false">
+    <TableView fx:id="tvMessage" managed="false" visible="false">
         <columns>
-            <TableColumn fx:id="tcMessageLogId" sortable="false" text="ID"/>
-            <TableColumn fx:id="tcMessageLogType" sortable="false" text="Type"/>
-            <TableColumn fx:id="tcMessageLogBody" sortable="false" text="Body"/>
-            <TableColumn fx:id="tcMessageLogTimestamp" sortable="false" text="Timestamp"/>
+            <TableColumn fx:id="tcMessageId" sortable="false" text="#"/>
+            <TableColumn fx:id="tcMessageUid" sortable="false" text="UID"/>
+            <TableColumn fx:id="tcMessageType" sortable="false" text="类型"/>
+            <TableColumn fx:id="tcMessageBody" sortable="false" text="消息体"/>
+            <TableColumn fx:id="tcMessageTimestamp" sortable="false" text="时间戳"/>
         </columns>
     </TableView>
     <TableView fx:id="tvResource" managed="false" visible="false">
         <columns>
-            <TableColumn fx:id="tcResourceId" sortable="false" text="ID"/>
-            <TableColumn fx:id="tcResourceType" sortable="false" text="Type"/>
-            <TableColumn fx:id="tcResourceUrl" sortable="false" text="Url"/>
-            <TableColumn fx:id="tcResourcePath" sortable="false" text="Path"/>
-            <TableColumn fx:id="tcResourceMd5" sortable="false" text="MD5"/>
-            <TableColumn fx:id="tcResourceTimestamp" sortable="false" text="Timestamp"/>
-            <TableColumn fx:id="tcResourceStatus" sortable="false" text="Status"/>
+            <TableColumn fx:id="tcResourceId" sortable="false" text="#"/>
+            <TableColumn fx:id="tcResourceType" sortable="false" text="类型"/>
+            <TableColumn fx:id="tcResourceUrl" sortable="false" text="下载地址"/>
+            <TableColumn fx:id="tcResourcePath" sortable="false" text="保存路径"/>
+            <TableColumn fx:id="tcResourceLength" sortable="false" text="文件大小"/>
+            <TableColumn fx:id="tcResourceModify" sortable="false" text="修改时间"/>
+            <TableColumn fx:id="tcResourceTimestamp" sortable="false" text="时间戳"/>
         </columns>
     </TableView>
 </VBox>

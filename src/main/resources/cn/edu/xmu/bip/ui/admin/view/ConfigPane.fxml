@@ -50,7 +50,7 @@
             </GridPane>
             <HBox alignment="CENTER_LEFT" spacing="8.0">
                 <Button fx:id="btnSave" text="保存"/>
-                <Label fx:id="lblHint1" textFill="#ff0000"/>
+                <Label fx:id="lblMessage1" textFill="#ff0000"/>
             </HBox>
         </VBox>
     </TitledPane>
@@ -92,7 +92,7 @@
             </GridPane>
             <HBox alignment="CENTER_LEFT" spacing="8.0">
                 <Button fx:id="btnSubmit" text="提交"/>
-                <Label fx:id="lblHint2" textFill="#ff0000"/>
+                <Label fx:id="lblMessage2" textFill="#ff0000"/>
             </HBox>
         </VBox>
     </TitledPane>

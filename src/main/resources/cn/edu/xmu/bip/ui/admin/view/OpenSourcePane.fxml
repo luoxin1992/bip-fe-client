@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.web.WebView?>
+<VBox xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1"
+      alignment="CENTER_LEFT" spacing="8.0"
+      fx:controller="cn.edu.xmu.bip.ui.admin.presenter.OpenSourcePresenter">
+    <padding>
+        <Insets bottom="16.0" left="16.0" right="16.0" top="16.0"/>
+    </padding>
+    <Label text="本软件使用了多个开源项目。"/>
+    <Label text="根据相关许可协议之要求，需保留以下未经修改的版权声明、许可条件及免责条款。"/>
+    <WebView fx:id="wvCopyright" contextMenuEnabled="false"/>
+</VBox>

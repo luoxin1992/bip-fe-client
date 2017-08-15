@@ -4,9 +4,10 @@
 package cn.edu.xmu.bip.ui.admin.presenter;
 
 import cn.com.lx1992.lib.client.util.DateTimeUtil;
-import cn.edu.xmu.bip.constant.AdminConstant;
-import cn.edu.xmu.bip.service.AdminService;
+import cn.edu.xmu.bip.service.IAdminService;
+import cn.edu.xmu.bip.service.factory.ServiceFactory;
 import cn.edu.xmu.bip.ui.admin.model.DataBrowsingModel;
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -15,12 +16,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 
 import javax.inject.Inject;
 import java.net.URL;
-import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 /**
@@ -30,10 +29,14 @@ import java.util.ResourceBundle;
  * @version 2017-6-26
  */
 public class DataBrowsingPresenter implements Initializable {
+    private static final String TABLE_FINGERPRINT = "fingerprint";
+    private static final String TABLE_MESSAGE = "message";
+    private static final String TABLE_RESOURCE = "resource";
+
     @FXML
     private ToggleGroup tgTable;
     @FXML
-    private Label lblHint;
+    private Label lblMessage;
     @FXML
     private DatePicker dpStart;
     @FXML
@@ -41,25 +44,27 @@ public class DataBrowsingPresenter implements Initializable {
     @FXML
     private Button btnQuery;
     @FXML
-    private TableView<DataBrowsingModel.FingerprintLogModel> tvFingerprintLog;
+    private TableView<DataBrowsingModel.FingerprintModel> tvFingerprint;
     @FXML
-    private TableColumn<DataBrowsingModel.FingerprintLogModel, Integer> tcFingerprintLogId;
+    private TableColumn<DataBrowsingModel.FingerprintModel, Integer> tcFingerprintId;
     @FXML
-    private TableColumn<DataBrowsingModel.FingerprintLogModel, String> tcFingerprintLogType;
+    private TableColumn<DataBrowsingModel.FingerprintModel, String> tcFingerprintEvent;
     @FXML
-    private TableColumn<DataBrowsingModel.FingerprintLogModel, String> tcFingerprintLogContent;
+    private TableColumn<DataBrowsingModel.FingerprintModel, String> tcFingerprintExtra;
     @FXML
-    private TableColumn<DataBrowsingModel.FingerprintLogModel, Long> tcFingerprintLogTimestamp;
+    private TableColumn<DataBrowsingModel.FingerprintModel, Long> tcFingerprintTimestamp;
     @FXML
-    private TableView<DataBrowsingModel.MessageLogModel> tvMessageLog;
+    private TableView<DataBrowsingModel.MessageModel> tvMessage;
     @FXML
-    private TableColumn<DataBrowsingModel.MessageLogModel, Integer> tcMessageLogId;
+    private TableColumn<DataBrowsingModel.MessageModel, Integer> tcMessageId;
     @FXML
-    private TableColumn<DataBrowsingModel.MessageLogModel, String> tcMessageLogType;
+    private TableColumn<DataBrowsingModel.MessageModel, String> tcMessageType;
     @FXML
-    private TableColumn<DataBrowsingModel.MessageLogModel, String> tcMessageLogBody;
+    private TableColumn<DataBrowsingModel.MessageModel, Long> tcMessageUid;
     @FXML
-    private TableColumn<DataBrowsingModel.MessageLogModel, Long> tcMessageLogTimestamp;
+    private TableColumn<DataBrowsingModel.MessageModel, String> tcMessageBody;
+    @FXML
+    private TableColumn<DataBrowsingModel.MessageModel, Long> tcMessageTimestamp;
     @FXML
     private TableView<DataBrowsingModel.ResourceModel> tvResource;
     @FXML
@@ -71,135 +76,121 @@ public class DataBrowsingPresenter implements Initializable {
     @FXML
     private TableColumn<DataBrowsingModel.ResourceModel, String> tcResourcePath;
     @FXML
-    private TableColumn<DataBrowsingModel.ResourceModel, String> tcResourceMd5;
+    private TableColumn<DataBrowsingModel.ResourceModel, Long> tcResourceLength;
+    @FXML
+    private TableColumn<DataBrowsingModel.ResourceModel, String> tcResourceModify;
     @FXML
     private TableColumn<DataBrowsingModel.ResourceModel, Long> tcResourceTimestamp;
-    @FXML
-    private TableColumn<DataBrowsingModel.ResourceModel, Integer> tcResourceStatus;
 
     @Inject
-    private AdminService adminService;
+    private ServiceFactory serviceFactory;
     @Inject
     private DataBrowsingModel dataBrowsingModel;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        bindView();
         bindViewModel();
         bindEvent();
-        bindTableVisibleWithManaged();
-        bindTableViewAndColumns();
     }
 
-    private void bindViewModel() {
-        dpStart.valueProperty().bindBidirectional(dataBrowsingModel.startProperty());
-        dpEnd.valueProperty().bindBidirectional(dataBrowsingModel.endProperty());
-        lblHint.textProperty().bindBidirectional(dataBrowsingModel.hintProperty());
-    }
-
-    private void bindEvent() {
-        //选择数据库表
-        tgTable.selectedToggleProperty().addListener(observable -> toggleDbTable());
-        //点击查询
-        btnQuery.setOnAction(event -> queryData());
-    }
-
-    private void bindTableVisibleWithManaged() {
-        //visible和managed属性双向绑定，使控件隐藏后不占用空间
-        tvFingerprintLog.visibleProperty().bindBidirectional(tvFingerprintLog.managedProperty());
-        tvMessageLog.visibleProperty().bindBidirectional(tvMessageLog.managedProperty());
+    private void bindView() {
+        //查询Button的disable属性绑定ToggleGroup未选择
+        btnQuery.disableProperty().bind(Bindings.createBooleanBinding(
+                () -> tgTable.getSelectedToggle() == null, tgTable.selectedToggleProperty()));
+        //结果TableView的visible和managed属性双向绑定，使控件隐藏后不占用空间
+        tvFingerprint.visibleProperty().bindBidirectional(tvFingerprint.managedProperty());
+        tvMessage.visibleProperty().bindBidirectional(tvMessage.managedProperty());
         tvResource.visibleProperty().bindBidirectional(tvResource.managedProperty());
     }
 
+    private void bindViewModel() {
+        dataBrowsingModel.startProperty().bindBidirectional(dpStart.valueProperty());
+        dataBrowsingModel.endProperty().bindBidirectional(dpEnd.valueProperty());
+        dataBrowsingModel.messageProperty().bindBidirectional(lblMessage.textProperty());
+        bindTableViewAndColumns();
+    }
+
     private void bindTableViewAndColumns() {
-        //指纹(扫描仪)日志
-        tvFingerprintLog.setItems(dataBrowsingModel.getFingerprintLogs());
-        tcFingerprintLogId.setCellValueFactory(cellValue -> cellValue.getValue().idProperty().asObject());
-        tcFingerprintLogType.setCellValueFactory(cellValue -> cellValue.getValue().typeProperty());
-        tcFingerprintLogContent.setCellValueFactory(cellValue -> cellValue.getValue().contentProperty());
-        tcFingerprintLogTimestamp.setCellValueFactory(cellValue -> cellValue.getValue().timestampProperty().asObject());
-        //消息日志
-        tvMessageLog.setItems(dataBrowsingModel.getMessageLogs());
-        tcMessageLogId.setCellValueFactory(cellValue -> cellValue.getValue().idProperty().asObject());
-        tcMessageLogType.setCellValueFactory(cellValue -> cellValue.getValue().typeProperty());
-        tcMessageLogBody.setCellValueFactory(cellValue -> cellValue.getValue().bodyProperty());
-        tcMessageLogTimestamp.setCellValueFactory(cellValue -> cellValue.getValue().timestampProperty().asObject());
-        //资源
-        tvResource.setItems(dataBrowsingModel.getResources());
+        tvFingerprint.itemsProperty().bindBidirectional(dataBrowsingModel.fingerprintsProperty());
+        tcFingerprintId.setCellValueFactory(cellValue -> cellValue.getValue().idProperty().asObject());
+        tcFingerprintEvent.setCellValueFactory(cellValue -> cellValue.getValue().eventProperty());
+        tcFingerprintExtra.setCellValueFactory(cellValue -> cellValue.getValue().extraProperty());
+        tcFingerprintTimestamp.setCellValueFactory(cellValue -> cellValue.getValue().timestampProperty().asObject());
+
+        tvMessage.itemsProperty().bindBidirectional(dataBrowsingModel.messagesProperty());
+        tcMessageId.setCellValueFactory(cellValue -> cellValue.getValue().idProperty().asObject());
+        tcMessageUid.setCellValueFactory(cellValue -> cellValue.getValue().uidProperty().asObject());
+        tcMessageType.setCellValueFactory(cellValue -> cellValue.getValue().typeProperty());
+        tcMessageBody.setCellValueFactory(cellValue -> cellValue.getValue().bodyProperty());
+        tcMessageTimestamp.setCellValueFactory(cellValue -> cellValue.getValue().timestampProperty().asObject());
+
+        tvResource.itemsProperty().bindBidirectional(dataBrowsingModel.resourcesProperty());
         tcResourceId.setCellValueFactory(cellValue -> cellValue.getValue().idProperty().asObject());
         tcResourceType.setCellValueFactory(cellValue -> cellValue.getValue().typeProperty());
         tcResourceUrl.setCellValueFactory(cellValue -> cellValue.getValue().urlProperty());
         tcResourcePath.setCellValueFactory(cellValue -> cellValue.getValue().pathProperty());
-        tcResourceMd5.setCellValueFactory(cellValue -> cellValue.getValue().md5Property());
+        tcResourceLength.setCellValueFactory(cellValue -> cellValue.getValue().lengthProperty().asObject());
+        tcResourceModify.setCellValueFactory(cellValue -> cellValue.getValue().modifyProperty());
         tcResourceTimestamp.setCellValueFactory(cellValue -> cellValue.getValue().timestampProperty().asObject());
-        tcResourceStatus.setCellValueFactory(cellValue -> cellValue.getValue().statusProperty().asObject());
     }
 
-    private void toggleDbTable() {
+    private void bindEvent() {
+        //选择库表
+        tgTable.selectedToggleProperty().addListener((property, oldValue, newValue) -> selectTable(((RadioButton) newValue).getId()));
+        //查询数据
+        btnQuery.setOnAction(event -> queryData(((RadioButton) tgTable.getSelectedToggle()).getId()));
+    }
+
+    private void selectTable(String table) {
         //切换数据库表时清空已有查询结果
-        dataBrowsingModel.setHint(null);
-        dataBrowsingModel.getFingerprintLogs().clear();
-        dataBrowsingModel.getMessageLogs().clear();
+        dataBrowsingModel.setMessage(null);
+        dataBrowsingModel.getFingerprints().clear();
+        dataBrowsingModel.getMessages().clear();
         dataBrowsingModel.getResources().clear();
-        //资源表默认查询周期(t-7)~t，其他表(t-1)~t
-        Toggle toggle = tgTable.getSelectedToggle();
-        switch (((RadioButton) toggle).getId()) {
-            case AdminConstant.TABLE_FINGERPRINT_LOG:
+
+        //fingerprint和message默认查询周期(t-1)~t、resource默认查询周期(t-7)~t
+        switch (table) {
+            case TABLE_FINGERPRINT:
                 dataBrowsingModel.setStart(DateTimeUtil.getYesterday());
                 dataBrowsingModel.setEnd(DateTimeUtil.getToday());
-                tvFingerprintLog.setVisible(true);
-                tvMessageLog.setVisible(false);
+
+                tvFingerprint.setVisible(true);
+                tvMessage.setVisible(false);
                 tvResource.setVisible(false);
                 break;
-            case AdminConstant.TABLE_MESSAGE_LOG:
+            case TABLE_MESSAGE:
                 dataBrowsingModel.setStart(DateTimeUtil.getYesterday());
                 dataBrowsingModel.setEnd(DateTimeUtil.getToday());
-                tvFingerprintLog.setVisible(false);
-                tvMessageLog.setVisible(true);
+
+                tvFingerprint.setVisible(false);
+                tvMessage.setVisible(true);
                 tvResource.setVisible(false);
                 break;
-            case AdminConstant.TABLE_RESOURCE:
+            case TABLE_RESOURCE:
                 dataBrowsingModel.setStart(DateTimeUtil.getLastWeekToday());
                 dataBrowsingModel.setEnd(DateTimeUtil.getToday());
-                tvFingerprintLog.setVisible(false);
-                tvMessageLog.setVisible(false);
+
+                tvFingerprint.setVisible(false);
+                tvMessage.setVisible(false);
                 tvResource.setVisible(true);
                 break;
         }
     }
 
-    private void queryData() {
-        RadioButton table = (RadioButton) tgTable.getSelectedToggle();
-        LocalDate start = dpStart.getValue();
-        LocalDate end = dpEnd.getValue();
+    private void queryData(String table) {
+        IAdminService adminService = (IAdminService) serviceFactory.getInstance(ServiceFactory.ADMIN);
 
-        if (validateParameter(table, start, end)) {
-            switch (table.getId()) {
-                case AdminConstant.TABLE_FINGERPRINT_LOG:
-                    adminService.queryFingerprintLog(start, end);
-                    break;
-                case AdminConstant.TABLE_MESSAGE_LOG:
-                    adminService.queryMessageLog(start, end);
-                    break;
-                case AdminConstant.TABLE_RESOURCE:
-                    adminService.queryResource(start, end);
-                    break;
-            }
+        switch (table) {
+            case TABLE_FINGERPRINT:
+                adminService.queryFingerprint();
+                break;
+            case TABLE_MESSAGE:
+                adminService.queryMessage();
+                break;
+            case TABLE_RESOURCE:
+                adminService.queryResource();
+                break;
         }
-    }
-
-    private boolean validateParameter(Toggle table, LocalDate start, LocalDate end) {
-        if (table == null) {
-            dataBrowsingModel.setHint(AdminConstant.DATA_BROWSING_TABLE_NOT_SELECT);
-            return false;
-        }
-        if (start == null || end == null) {
-            dataBrowsingModel.setHint(AdminConstant.DATA_BROWSING_DATE_NOT_SET);
-            return false;
-        }
-        if (start.isAfter(end)) {
-            dataBrowsingModel.setHint(AdminConstant.DATA_BROWSING_DATE_INVALID);
-            return false;
-        }
-        return true;
     }
 }

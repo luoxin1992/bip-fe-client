@@ -17,6 +17,8 @@ import javafx.collections.ObservableList;
 import java.time.LocalDate;
 
 /**
+ * 数据浏览ViewModel
+ *
  * @author luoxin
  * @version 2017-7-3
  */
@@ -32,28 +34,28 @@ public class DataBrowsingModel {
     /**
      * 提示信息
      */
-    private StringProperty hint;
+    private StringProperty message;
     /**
-     * 指纹(扫描仪)日志表查询结果
+     * 指纹(仪)(日志)表查询结果
      */
-    private ObservableList<FingerprintLogModel> fingerprintLogs;
+    private ObjectProperty<ObservableList<FingerprintModel>> fingerprints;
     /**
-     * 消息日志表查询结果
+     * 消息(日志)表查询结果
      */
-    private ObservableList<MessageLogModel> messageLogs;
+    private ObjectProperty<ObservableList<MessageModel>> messages;
     /**
      * 资源表查询结果
      */
-    private ObservableList<ResourceModel> resources;
+    private ObjectProperty<ObservableList<ResourceModel>> resources;
 
     public DataBrowsingModel() {
         this.start = new SimpleObjectProperty<>();
         this.end = new SimpleObjectProperty<>();
-        this.hint = new SimpleStringProperty();
+        this.message = new SimpleStringProperty();
 
-        this.fingerprintLogs = FXCollections.observableArrayList();
-        this.messageLogs = FXCollections.observableArrayList();
-        this.resources = FXCollections.observableArrayList();
+        this.fingerprints = new SimpleObjectProperty<>(FXCollections.observableArrayList());
+        this.messages = new SimpleObjectProperty<>(FXCollections.observableArrayList());
+        this.resources = new SimpleObjectProperty<>(FXCollections.observableArrayList());
     }
 
     public LocalDate getStart() {
@@ -80,43 +82,58 @@ public class DataBrowsingModel {
         this.end.set(end);
     }
 
-    public String getHint() {
-        return hint.get();
+    public String getMessage() {
+        return message.get();
     }
 
-    public StringProperty hintProperty() {
-        return hint;
+    public StringProperty messageProperty() {
+        return message;
     }
 
-    public void setHint(String hint) {
-        this.hint.set(hint);
+    public void setMessage(String message) {
+        this.message.set(message);
     }
 
-    public ObservableList<FingerprintLogModel> getFingerprintLogs() {
-        return fingerprintLogs;
+    public ObservableList<FingerprintModel> getFingerprints() {
+        return fingerprints.get();
     }
 
-    public void setFingerprintLogs(ObservableList<FingerprintLogModel> fingerprintLogs) {
-        this.fingerprintLogs = fingerprintLogs;
+    public ObjectProperty<ObservableList<FingerprintModel>> fingerprintsProperty() {
+        return fingerprints;
     }
 
-    public ObservableList<MessageLogModel> getMessageLogs() {
-        return messageLogs;
+    public void setFingerprints(ObservableList<FingerprintModel> fingerprints) {
+        this.fingerprints.set(fingerprints);
     }
 
-    public void setMessageLogs(ObservableList<MessageLogModel> messageLogs) {
-        this.messageLogs = messageLogs;
+    public ObservableList<MessageModel> getMessages() {
+        return messages.get();
+    }
+
+    public ObjectProperty<ObservableList<MessageModel>> messagesProperty() {
+        return messages;
+    }
+
+    public void setMessages(ObservableList<MessageModel> messages) {
+        this.messages.set(messages);
     }
 
     public ObservableList<ResourceModel> getResources() {
+        return resources.get();
+    }
+
+    public ObjectProperty<ObservableList<ResourceModel>> resourcesProperty() {
         return resources;
     }
 
     public void setResources(ObservableList<ResourceModel> resources) {
-        this.resources = resources;
+        this.resources.set(resources);
     }
 
-    public static class FingerprintLogModel {
+    /**
+     * 指纹(仪)(日志)表查询结果ViewModel
+     */
+    public static class FingerprintModel {
         /**
          * ID
          */
@@ -124,20 +141,20 @@ public class DataBrowsingModel {
         /**
          * 类型
          */
-        private StringProperty type;
+        private StringProperty event;
         /**
-         * 内容
+         * 附加信息
          */
-        private StringProperty content;
+        private StringProperty extra;
         /**
          * 时间戳
          */
         private LongProperty timestamp;
 
-        public FingerprintLogModel() {
+        public FingerprintModel() {
             this.id = new SimpleIntegerProperty();
-            this.type = new SimpleStringProperty();
-            this.content = new SimpleStringProperty();
+            this.event = new SimpleStringProperty();
+            this.extra = new SimpleStringProperty();
             this.timestamp = new SimpleLongProperty();
         }
 
@@ -153,28 +170,28 @@ public class DataBrowsingModel {
             this.id.set(id);
         }
 
-        public String getType() {
-            return type.get();
+        public String getEvent() {
+            return event.get();
         }
 
-        public StringProperty typeProperty() {
-            return type;
+        public StringProperty eventProperty() {
+            return event;
         }
 
-        public void setType(String type) {
-            this.type.set(type);
+        public void setEvent(String event) {
+            this.event.set(event);
         }
 
-        public String getContent() {
-            return content.get();
+        public String getExtra() {
+            return extra.get();
         }
 
-        public StringProperty contentProperty() {
-            return content;
+        public StringProperty extraProperty() {
+            return extra;
         }
 
-        public void setContent(String content) {
-            this.content.set(content);
+        public void setExtra(String extra) {
+            this.extra.set(extra);
         }
 
         public Long getTimestamp() {
@@ -190,11 +207,18 @@ public class DataBrowsingModel {
         }
     }
 
-    public static class MessageLogModel {
+    /**
+     * 消息(日志)表查询结果ViewModel
+     */
+    public static class MessageModel {
         /**
          * ID
          */
         private IntegerProperty id;
+        /**
+         * UID
+         */
+        private LongProperty uid;
         /**
          * 类型
          */
@@ -208,8 +232,9 @@ public class DataBrowsingModel {
          */
         private LongProperty timestamp;
 
-        public MessageLogModel() {
+        public MessageModel() {
             this.id = new SimpleIntegerProperty();
+            this.uid = new SimpleLongProperty();
             this.type = new SimpleStringProperty();
             this.body = new SimpleStringProperty();
             this.timestamp = new SimpleLongProperty();
@@ -225,6 +250,18 @@ public class DataBrowsingModel {
 
         public void setId(int id) {
             this.id.set(id);
+        }
+
+        public long getUid() {
+            return uid.get();
+        }
+
+        public LongProperty uidProperty() {
+            return uid;
+        }
+
+        public void setUid(long uid) {
+            this.uid.set(uid);
         }
 
         public String getType() {
@@ -264,6 +301,9 @@ public class DataBrowsingModel {
         }
     }
 
+    /**
+     * 资源表查询结果ViewModel
+     */
     public static class ResourceModel {
         /**
          * ID
@@ -282,26 +322,26 @@ public class DataBrowsingModel {
          */
         private StringProperty path;
         /**
-         * MD5
+         * 文件大小
          */
-        private StringProperty md5;
+        private LongProperty length;
+        /**
+         * 修改时间
+         */
+        private StringProperty modify;
         /**
          * 时间戳
          */
         private LongProperty timestamp;
-        /**
-         * 状态
-         */
-        private IntegerProperty status;
 
         public ResourceModel() {
             this.id = new SimpleIntegerProperty();
             this.type = new SimpleStringProperty();
             this.url = new SimpleStringProperty();
             this.path = new SimpleStringProperty();
-            this.md5 = new SimpleStringProperty();
+            this.length = new SimpleLongProperty();
+            this.modify = new SimpleStringProperty();
             this.timestamp = new SimpleLongProperty();
-            this.status = new SimpleIntegerProperty();
         }
 
         public int getId() {
@@ -352,16 +392,28 @@ public class DataBrowsingModel {
             this.path.set(path);
         }
 
-        public String getMd5() {
-            return md5.get();
+        public long getLength() {
+            return length.get();
         }
 
-        public StringProperty md5Property() {
-            return md5;
+        public LongProperty lengthProperty() {
+            return length;
         }
 
-        public void setMd5(String md5) {
-            this.md5.set(md5);
+        public void setLength(Long length) {
+            this.length.set(length);
+        }
+
+        public String getModify() {
+            return modify.get();
+        }
+
+        public StringProperty modifyProperty() {
+            return modify;
+        }
+
+        public void setModify(String modify) {
+            this.modify.set(modify);
         }
 
         public Long getTimestamp() {
@@ -374,18 +426,6 @@ public class DataBrowsingModel {
 
         public void setTimestamp(Long timestamp) {
             this.timestamp.set(timestamp);
-        }
-
-        public int getStatus() {
-            return status.get();
-        }
-
-        public IntegerProperty statusProperty() {
-            return status;
-        }
-
-        public void setStatus(int status) {
-            this.status.set(status);
         }
     }
 }

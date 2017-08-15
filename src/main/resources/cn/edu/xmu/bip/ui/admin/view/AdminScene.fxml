@@ -11,7 +11,7 @@
     <Tab closable="false" text="数据浏览">
         <fx:include source="DataBrowsingPane.fxml"/>
     </Tab>
-    <Tab closable="false" text="反馈问题">
-        <fx:include source="FeedbackPane.fxml"/>
+    <Tab closable="false" text="开源许可">
+        <fx:include source="OpenSourcePane.fxml"/>
     </Tab>
 </TabPane>

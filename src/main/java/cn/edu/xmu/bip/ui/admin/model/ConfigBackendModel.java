@@ -24,12 +24,12 @@ public class ConfigBackendModel {
     /**
      * 提示信息
      */
-    private StringProperty hint;
+    private StringProperty message;
 
     public ConfigBackendModel() {
         this.api = new SimpleStringProperty();
         this.ws = new SimpleStringProperty();
-        this.hint = new SimpleStringProperty();
+        this.message = new SimpleStringProperty();
     }
 
     public String getApi() {
@@ -56,15 +56,15 @@ public class ConfigBackendModel {
         this.ws.set(ws);
     }
 
-    public String getHint() {
-        return hint.get();
+    public String getMessage() {
+        return message.get();
     }
 
-    public StringProperty hintProperty() {
-        return hint;
+    public StringProperty messageProperty() {
+        return message;
     }
 
-    public void setHint(String hint) {
-        this.hint.set(hint);
+    public void setMessage(String message) {
+        this.message.set(message);
     }
 }

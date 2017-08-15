@@ -3,6 +3,8 @@
  */
 package cn.edu.xmu.bip.ui.admin.model;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -24,9 +26,13 @@ public class ConfigCounterModel {
      */
     private StringProperty name;
     /**
+     * 本机网卡列表
+     */
+    private ObjectProperty<ObservableList<String>> nicList;
+    /**
      * 绑定网卡
      */
-    private StringProperty nic;
+    private StringProperty nicCurrent;
     /**
      * MAC地址
      */
@@ -38,20 +44,16 @@ public class ConfigCounterModel {
     /**
      * 提示信息
      */
-    private StringProperty hint;
-    /**
-     * 本机网卡列表
-     */
-    private ObservableList<String> nicList;
+    private StringProperty message;
 
     public ConfigCounterModel() {
         this.number = new SimpleStringProperty();
         this.name = new SimpleStringProperty();
-        this.nic = new SimpleStringProperty();
+        this.nicList = new SimpleObjectProperty<>(FXCollections.observableArrayList());
+        this.nicCurrent = new SimpleStringProperty();
         this.mac = new SimpleStringProperty();
         this.ip = new SimpleStringProperty();
-        this.hint = new SimpleStringProperty();
-        this.nicList = FXCollections.observableArrayList();
+        this.message = new SimpleStringProperty();
     }
 
     public String getNumber() {
@@ -78,16 +80,28 @@ public class ConfigCounterModel {
         this.name.set(name);
     }
 
-    public String getNic() {
-        return nic.get();
+    public ObservableList<String> getNicList() {
+        return nicList.get();
     }
 
-    public StringProperty nicProperty() {
-        return nic;
+    public ObjectProperty<ObservableList<String>> nicListProperty() {
+        return nicList;
     }
 
-    public void setNic(String nic) {
-        this.nic.set(nic);
+    public void setNicList(ObservableList<String> nicList) {
+        this.nicList.set(nicList);
+    }
+
+    public String getNicCurrent() {
+        return nicCurrent.get();
+    }
+
+    public StringProperty nicCurrentProperty() {
+        return nicCurrent;
+    }
+
+    public void setNicCurrent(String nicCurrent) {
+        this.nicCurrent.set(nicCurrent);
     }
 
     public String getMac() {
@@ -114,23 +128,15 @@ public class ConfigCounterModel {
         this.ip.set(ip);
     }
 
-    public String getHint() {
-        return hint.get();
+    public String getMessage() {
+        return message.get();
     }
 
-    public StringProperty hintProperty() {
-        return hint;
+    public StringProperty messageProperty() {
+        return message;
     }
 
-    public void setHint(String hint) {
-        this.hint.set(hint);
-    }
-
-    public ObservableList<String> getNicList() {
-        return nicList;
-    }
-
-    public void setNicList(ObservableList<String> nicList) {
-        this.nicList = nicList;
+    public void setMessage(String message) {
+        this.message.set(message);
     }
 }
