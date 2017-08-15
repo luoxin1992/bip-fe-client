@@ -33,6 +33,14 @@ public interface IMessageDAO extends IBaseDAO {
     List<MessageDO> query(long start, long end);
 
     /**
+     * 查询单个
+     *
+     * @param uid UID
+     * @return 查询结果
+     */
+    MessageDO selectOne(long uid);
+
+    /**
      * 插入
      *
      * @param uid  UID

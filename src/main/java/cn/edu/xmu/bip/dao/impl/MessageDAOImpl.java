@@ -17,6 +17,8 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO {
             "FROM tbl_message WHERE timestamp >= ? AND timestamp <= ? AND status = 1";
     private static final String SQL_QUERY = "SELECT id, uid, type, body, timestamp " +
             "FROM tbl_message WHERE timestamp >= ? AND timestamp <= ? AND status = 1 ORDER BY timestamp DESC";
+    private static final String SQL_SELECT_ONE = "SELECT id, uid, type, body, timestamp " +
+            "FROM tbl_message WHERE uid = ? AND status = 1 LIMIT 1";
     private static final String SQL_INSERT = "INSERT INTO tbl_message(uid, type, body, timestamp) " +
             "VALUES (?, ?, ?, ?)";
 
@@ -33,6 +35,11 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO {
     @Override
     public List<MessageDO> query(long start, long end) {
         return super.selectBatch(MessageDO.class, SQL_QUERY, start, end);
+    }
+
+    @Override
+    public MessageDO selectOne(long uid) {
+        return super.select(MessageDO.class, SQL_SELECT_ONE, uid);
     }
 
     @Override
