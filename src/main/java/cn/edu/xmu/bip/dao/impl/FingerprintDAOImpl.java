@@ -16,7 +16,7 @@ public class FingerprintDAOImpl extends BaseDAOImpl implements IFingerprintDAO {
     private static final String SQL_COUNT = "SELECT COUNT(1) " +
             "FROM tbl_fingerprint WHERE timestamp >= ? AND timestamp <= ? AND status = 1";
     private static final String SQL_QUERY = "SELECT id, event, extra, timestamp " +
-            "FROM tbl_fingerprint WHERE timestamp >= ? AND timestamp <= ? AND status = 1 ORDER BY timestamp DESC";
+            "FROM tbl_fingerprint WHERE timestamp >= ? AND timestamp <= ? AND status = 1 ORDER BY id DESC";
     private static final String SQL_INSERT = "INSERT INTO tbl_fingerprint(event, extra, timestamp) " +
             "VALUES (?, ?, ?)";
 

@@ -16,7 +16,7 @@ public class ResourceDAOImpl extends BaseDAOImpl implements IResourceDAO {
     private static final String SQL_COUNT = "SELECT COUNT(1) " +
             "FROM tbl_resource WHERE timestamp >= ? AND timestamp <= ? AND status = 1";
     private static final String SQL_QUERY = "SELECT id, type, url, path, length, modify, timestamp " +
-            "FROM tbl_resource WHERE timestamp >= ? AND timestamp <= ? AND status = 1 ORDER BY timestamp DESC";
+            "FROM tbl_resource WHERE timestamp >= ? AND timestamp <= ? AND status = 1 ORDER BY id DESC";
     private static final String SQL_SELECT_ALL = "SELECT id, type, url, path, length, modify, timestamp " +
             "FROM tbl_resource WHERE status = 1";
     private static final String SQL_SELECT_ONE = "SELECT id, type, url, path, length, modify, timestamp " +

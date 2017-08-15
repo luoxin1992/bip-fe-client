@@ -16,7 +16,7 @@ public class MessageDAOImpl extends BaseDAOImpl implements IMessageDAO {
     private static final String SQL_COUNT = "SELECT COUNT(1) " +
             "FROM tbl_message WHERE timestamp >= ? AND timestamp <= ? AND status = 1";
     private static final String SQL_QUERY = "SELECT id, uid, type, body, timestamp " +
-            "FROM tbl_message WHERE timestamp >= ? AND timestamp <= ? AND status = 1 ORDER BY timestamp DESC";
+            "FROM tbl_message WHERE timestamp >= ? AND timestamp <= ? AND status = 1 ORDER BY id DESC";
     private static final String SQL_SELECT_ONE = "SELECT id, uid, type, body, timestamp " +
             "FROM tbl_message WHERE uid = ? AND status = 1 LIMIT 1";
     private static final String SQL_INSERT = "INSERT INTO tbl_message(uid, type, body, timestamp) " +
