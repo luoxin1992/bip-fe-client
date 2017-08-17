@@ -11,7 +11,7 @@ import cn.edu.xmu.bip.meta.MessageTypeEnum;
  * @author luoxin
  * @version 2017-4-25
  */
-public class AckMessage extends BaseSendMessage {
+public class AckMessage extends BaseMessage {
     public AckMessage() {
         super(MessageTypeEnum.ACK);
     }
