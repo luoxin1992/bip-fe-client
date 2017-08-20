@@ -1113,8 +1113,8 @@ public class MessageServiceImpl implements IMessageService {
         userModel.setNumber(number);
         userModel.setName(name);
         userModel.setPhoto(new Image(!StringUtils.isEmpty(photo) ? photo : ResourceConstant.DEFAULT_USER_PHOTO));
-        paneVisibleModel.setClockVisible(true);
-        paneVisibleModel.setUserVisible(false);
+        paneVisibleModel.setClockVisible(false);
+        paneVisibleModel.setUserVisible(true);
     }
 
     /**
