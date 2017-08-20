@@ -3,9 +3,11 @@
  */
 package cn.edu.xmu.bip.service;
 
-/**消息服务
+/**
+ * Service基类
+ *
  * @author luoxin
- * @version 2017-6-26
+ * @version 2017-8-2
  */
-public class MessageService {
+public interface IBaseService {
 }

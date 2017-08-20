@@ -18,7 +18,6 @@ import cn.edu.xmu.bip.dao.factory.DAOFactory;
 import cn.edu.xmu.bip.domain.FingerprintDO;
 import cn.edu.xmu.bip.domain.MessageDO;
 import cn.edu.xmu.bip.domain.ResourceDO;
-import cn.edu.xmu.bip.dto.ConfigBackendDTO;
 import cn.edu.xmu.bip.exception.ClientException;
 import cn.edu.xmu.bip.exception.ClientExceptionEnum;
 import cn.edu.xmu.bip.exception.ServerException;
@@ -43,6 +42,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -51,8 +51,8 @@ import java.util.stream.Collectors;
 
 public class AdminServiceImpl implements IAdminService {
     private static final String CONFIG_BACKEND_PRESET_FILE = "/file/preset-backend.json";
-    private static final String CONFIG_BACKEND_PRESET_KEY_API = "api";
-    private static final String CONFIG_BACKEND_PRESET_KEY_WS = "ws";
+    private static final String CONFIG_BACKEND_KEY_API = "api";
+    private static final String CONFIG_BACKEND_KEY_WS = "ws";
     private static final int CONFIG_COUNTER_UNBIND_ERROR_CODE = 20308;
     private static final int DATA_BROWSING_MAX_QUERY_COUNT = 1000;
 
@@ -72,9 +72,9 @@ public class AdminServiceImpl implements IAdminService {
 
     @Override
     public void getCurrentBackend() {
-        CompletableFuture.runAsync(new Task<ConfigBackendDTO>() {
+        CompletableFuture.runAsync(new Task<Map<String, String>>() {
             @Override
-            protected ConfigBackendDTO call() throws Exception {
+            protected Map<String, String> call() throws Exception {
                 String api = PreferencesUtil.get(PreferenceKeyConstant.CONFIG_BACKEND_API);
                 String ws = PreferencesUtil.get(PreferenceKeyConstant.CONFIG_BACKEND_WS);
 
@@ -82,13 +82,17 @@ public class AdminServiceImpl implements IAdminService {
                     logger.warn("backend url not configured");
                     throw new ClientException(ClientExceptionEnum.ADMIN_CONFIG_BACKEND_NOT_CONFIGURE);
                 }
-                return new ConfigBackendDTO(api, ws);
+
+                Map<String, String> retMap = new HashMap<>();
+                retMap.put(CONFIG_BACKEND_KEY_API, api);
+                retMap.put(CONFIG_BACKEND_KEY_WS, ws);
+                return retMap;
             }
 
             @Override
             protected void succeeded() {
-                configBackendModel.setApi(getValue().getApi());
-                configBackendModel.setWs(getValue().getWs());
+                configBackendModel.setApi(getValue().get(CONFIG_BACKEND_KEY_API));
+                configBackendModel.setWs(getValue().get(CONFIG_BACKEND_KEY_WS));
                 configBackendModel.setMessage(null);
             }
 
@@ -103,9 +107,9 @@ public class AdminServiceImpl implements IAdminService {
 
     @Override
     public void getPresetBackend(String preset) {
-        CompletableFuture.runAsync(new Task<ConfigBackendDTO>() {
+        CompletableFuture.runAsync(new Task<Map<String, String>>() {
             @Override
-            protected ConfigBackendDTO call() throws Exception {
+            protected Map<String, String> call() throws Exception {
                 try (InputStream is = getClass().getResourceAsStream(CONFIG_BACKEND_PRESET_FILE)) {
                     JsonNode root = JsonUtil.toObject(is);
                     if (!root.has(preset)) {
@@ -113,9 +117,13 @@ public class AdminServiceImpl implements IAdminService {
                         throw new ClientException(ClientExceptionEnum.ADMIN_CONFIG_BACKEND_PRESET_UNAVAILABLE, preset);
                     }
 
-                    String api = root.get(preset).get(CONFIG_BACKEND_PRESET_KEY_API).asText();
-                    String ws = root.get(preset).get(CONFIG_BACKEND_PRESET_KEY_WS).asText();
-                    return new ConfigBackendDTO(api, ws);
+                    String api = root.get(preset).get(CONFIG_BACKEND_KEY_API).asText();
+                    String ws = root.get(preset).get(CONFIG_BACKEND_KEY_WS).asText();
+
+                    Map<String, String> retMap = new HashMap<>();
+                    retMap.put(CONFIG_BACKEND_KEY_API, api);
+                    retMap.put(CONFIG_BACKEND_KEY_WS, ws);
+                    return retMap;
                 } catch (IOException e) {
                     logger.error("get backend preset {} failed", preset, e);
                     throw new ClientException(ClientExceptionEnum.ADMIN_CONFIG_BACKEND_PRESET_ERROR);
@@ -124,8 +132,8 @@ public class AdminServiceImpl implements IAdminService {
 
             @Override
             protected void succeeded() {
-                configBackendModel.setApi(getValue().getApi());
-                configBackendModel.setWs(getValue().getWs());
+                configBackendModel.setApi(getValue().get(CONFIG_BACKEND_KEY_API));
+                configBackendModel.setWs(getValue().get(CONFIG_BACKEND_KEY_WS));
                 configBackendModel.setMessage(null);
             }
 
