@@ -175,7 +175,7 @@ public class MessageServiceImpl implements IMessageService {
         IMessageDAO messageDAO = (IMessageDAO) daoFactory.getInstance(DAOFactory.MESSAGE);
         MessageDO domain = messageDAO.selectOne(uid);
         if (domain != null) {
-            logger.error("message {} break the idempotent principle");
+            logger.error("message {} break the idempotent principle", domain.getUid());
             throw new ClientException(ClientExceptionEnum.MESSAGE_IDEMPOTENT_BROKEN);
         }
     }
@@ -1021,9 +1021,11 @@ public class MessageServiceImpl implements IMessageService {
                 message.setTemplate(template);
                 break;
         }
+        String body = JsonUtil.toJson(message);
+        createLog(uid, message.getType(), body);
 
         IWSService wsService = (IWSService) serviceFactory.getInstance(ServiceFactory.WS);
-        wsService.sendMessage(JsonUtil.toJson(message));
+        wsService.sendMessage(body);
     }
 
     /**
@@ -1050,9 +1052,11 @@ public class MessageServiceImpl implements IMessageService {
                 message.setTemplate(template);
                 break;
         }
+        String body = JsonUtil.toJson(message);
+        createLog(uid, message.getType(), body);
 
         IWSService wsService = (IWSService) serviceFactory.getInstance(ServiceFactory.WS);
-        wsService.sendMessage(JsonUtil.toJson(message));
+        wsService.sendMessage(body);
     }
 
     //更新窗格ViewModel
