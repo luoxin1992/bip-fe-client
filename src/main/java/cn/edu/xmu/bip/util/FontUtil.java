@@ -18,8 +18,8 @@ public class FontUtil {
     //常规字体为冬青黑体W3，加粗字体为冬青黑体W6
     private static final String REGULAR_FONT_FAMILY = "Hiragino Sans GB W3";
     private static final String BOLD_FONT_FAMILY = "Hiragino Sans GB W6";
-    private static final String REGULAR_FONT_FILENAME = "../font/Hiragino-Sans-GB-W3.ttf";
-    private static final String BOLD_FONT_FILENAME = "../font/Hiragino-Sans-GB-W6.ttf";
+    private static final String REGULAR_FONT_FILENAME = "/font/Hiragino-Sans-GB-W3.ttf";
+    private static final String BOLD_FONT_FILENAME = "/font/Hiragino-Sans-GB-W6.ttf";
     //最小字体大小为16点，其他字体大小亦为8的整数倍
     private static final int MIN_FONT_SIZE = 16;
     private static final int BASE_FONT_SIZE = 8;

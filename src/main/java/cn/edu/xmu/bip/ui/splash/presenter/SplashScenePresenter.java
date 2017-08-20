@@ -3,11 +3,11 @@
  */
 package cn.edu.xmu.bip.ui.splash.presenter;
 
+import cn.com.lx1992.lib.client.util.CrashUtil;
 import cn.edu.xmu.bip.service.IMiscService;
 import cn.edu.xmu.bip.service.IResourceService;
 import cn.edu.xmu.bip.service.factory.ServiceFactory;
 import cn.edu.xmu.bip.ui.StageFactory;
-import cn.edu.xmu.bip.util.CrashUtil;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
