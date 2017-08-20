@@ -3,33 +3,37 @@
  */
 package cn.edu.xmu.bip.ui.main.model;
 
+import cn.edu.xmu.bip.constant.ResourceConstant;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.scene.image.Image;
 
 /**
- * 主界面-客户信息
+ * 主界面-用户信息
  *
  * @author luoxin
  * @version 2017-6-5
  */
 public class UserModel {
     /**
-     * 客户编号
+     * 用户编号
      */
     private StringProperty number;
     /**
-     * 客户姓名
+     * 用户姓名
      */
     private StringProperty name;
     /**
-     * 客户照片(URL)
+     * 用户照片
      */
-    private StringProperty photo;
+    private ObjectProperty<Image> photo;
 
     public UserModel() {
         number = new SimpleStringProperty();
         name = new SimpleStringProperty();
-        photo = new SimpleStringProperty();
+        photo = new SimpleObjectProperty<>(new Image(ResourceConstant.DEFAULT_USER_PHOTO));
     }
 
     public String getNumber() {
@@ -56,15 +60,15 @@ public class UserModel {
         this.name.set(name);
     }
 
-    public String getPhoto() {
+    public Image getPhoto() {
         return photo.get();
     }
 
-    public StringProperty photoProperty() {
+    public ObjectProperty<Image> photoProperty() {
         return photo;
     }
 
-    public void setPhoto(String photo) {
+    public void setPhoto(Image photo) {
         this.photo.set(photo);
     }
 }

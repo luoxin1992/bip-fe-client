@@ -3,6 +3,8 @@
  */
 package cn.edu.xmu.bip.ui.main.model;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -21,10 +23,15 @@ public class CounterModel {
      * 窗口名称
      */
     private StringProperty name;
+    /**
+     * 关闭标识
+     */
+    private BooleanProperty close;
 
     public CounterModel() {
         number = new SimpleStringProperty();
         name = new SimpleStringProperty();
+        close = new SimpleBooleanProperty(false);
     }
 
     public String getNumber() {
@@ -49,5 +56,17 @@ public class CounterModel {
 
     public void setName(String name) {
         this.name.set(name);
+    }
+
+    public boolean getClose() {
+        return close.get();
+    }
+
+    public BooleanProperty closeProperty() {
+        return close;
+    }
+
+    public void setClose(boolean close) {
+        this.close.set(close);
     }
 }

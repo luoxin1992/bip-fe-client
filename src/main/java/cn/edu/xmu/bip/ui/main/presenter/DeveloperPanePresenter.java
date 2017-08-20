@@ -25,6 +25,10 @@ public class DeveloperPanePresenter implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        bindView();
+    }
+
+    private void bindView() {
         ivDeveloper.fitWidthProperty().bind(spParent.widthProperty());
         ivDeveloper.fitHeightProperty().bind(spParent.heightProperty());
     }

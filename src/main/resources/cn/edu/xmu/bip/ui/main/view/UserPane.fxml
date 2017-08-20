@@ -12,13 +12,16 @@
       alignment="CENTER" prefHeight="475.0" prefWidth="342.0" spacing="19.79"
       style="-fx-background-radius: 12; -fx-background-insets: 8; -fx-background-color: rgba(255, 255, 255, 0.5);"
       fx:id="vbParent" fx:controller="cn.edu.xmu.bip.ui.main.presenter.UserPanePresenter">
-    <ImageView fx:id="ivPhoto" fitHeight="257.29" fitWidth="342.0" pickOnBounds="true" preserveRatio="true">
-        <Image url="@/image/photo-unknown.png"/>
-    </ImageView>
+    <VBox fx:id="vbPhoto" alignment="CENTER" prefHeight="298.67" prefWidth="256.5"
+          maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" >
+        <ImageView fx:id="ivPhoto" fitHeight="298.67" fitWidth="256.5" pickOnBounds="true" preserveRatio="true">
+            <Image url="@/image/photo-unknown.png"/>
+        </ImageView>
+    </VBox>
     <HBox alignment="BASELINE_LEFT">
         <Label fx:id="lblNumberPrompt" minHeight="-Infinity" minWidth="-Infinity" text="编号：">
             <font>
-                <Font size="28.0"/>
+                <Font size="24.0"/>
             </font>
         </Label>
         <Label fx:id="lblNumber" textOverrun="WORD_ELLIPSIS" textFill="#ffffff">

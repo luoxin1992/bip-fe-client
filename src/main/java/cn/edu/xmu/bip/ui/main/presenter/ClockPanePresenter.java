@@ -4,7 +4,7 @@
 package cn.edu.xmu.bip.ui.main.presenter;
 
 import cn.edu.xmu.bip.ui.main.model.ClockModel;
-import cn.edu.xmu.bip.service.MiscService;
+import cn.edu.xmu.bip.ui.main.model.PaneVisibleModel;
 import cn.edu.xmu.bip.util.FontUtil;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
@@ -78,10 +78,15 @@ public class ClockPanePresenter implements Initializable {
     @Inject
     private ClockModel clockModel;
     @Inject
-    private MiscService clockService;
+    private PaneVisibleModel paneVisibleModel;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        bindViewModel();
+        bindView();
+    }
+
+    private void bindView() {
         DoubleBinding parentSpacingBinding = Bindings.multiply(vbParent.heightProperty(), PARENT_SPACING_FACTOR);
         vbParent.spacingProperty().bind(parentSpacingBinding);
 
@@ -97,7 +102,7 @@ public class ClockPanePresenter implements Initializable {
         cirFace.strokeWidthProperty().bind(faceStrokeWidthBinding);
 
         //钟面半径变化时重绘刻度
-        cirFace.radiusProperty().addListener((property, oldValue, newValue) -> repaintScale());
+        cirFace.radiusProperty().addListener((observable, oldValue, newValue) -> repaintScale());
 
         //主轴半径
         DoubleBinding spindleRadiusBinding = Bindings.multiply(cirFace.radiusProperty(), SPINDLE_RADIUS_FACTOR);
@@ -130,16 +135,14 @@ public class ClockPanePresenter implements Initializable {
                 Bindings.multiply(cirFace.radiusProperty(), SECOND_HAND_STROKE_WIDTH_FACTOR);
         lnSecond.strokeWidthProperty().bind(secondHandStrokeWidthBinding);
 
+        //数字日期时间字体
         Callable<Font> datetimeFont = () ->
                 FontUtil.loadFont(vbParent.getHeight() * DATE_TIME_HEIGHT_FACTOR, false);
         ObjectBinding<Font> datetimeFontBinding = Bindings.createObjectBinding(datetimeFont, vbParent.heightProperty());
         lblDate.fontProperty().bind(datetimeFontBinding);
         lblTime.fontProperty().bind(datetimeFontBinding);
 
-        lblDate.textProperty().bind(clockModel.dateProperty());
-        lblTime.textProperty().bind(clockModel.timeProperty());
-        lblTime.textProperty().addListener(observable ->
-                repaintHand(clockModel.getHour(), clockModel.getMinute(), clockModel.getSecond()));
+        bindHandRotateAngle();
     }
 
     /**
@@ -159,21 +162,28 @@ public class ClockPanePresenter implements Initializable {
         }
     }
 
-    /**
-     * 根据给定时间，重绘(旋转)时分秒针
-     *
-     * @param hour   时
-     * @param minute 分
-     * @param second 秒
-     */
-    private void repaintHand(int hour, int minute, int second) {
-        double hourDegree = (hour % 12 + minute / (double) 60 + second / (double) 3600) * 30;
-        ((Rotate) lnHour.getTransforms().get(0)).setAngle(hourDegree);
+    private void bindHandRotateAngle() {
+        Callable<Double> hourHandRotateAngle = () -> (clockModel.getHour() % 12 + clockModel.getMinute() / (double)
+                60 + clockModel.getHour() / (double) 3600) * 30;
+        DoubleBinding hourHandRotateAngleBinding = Bindings.createDoubleBinding(hourHandRotateAngle, clockModel
+                .hourProperty(), clockModel.minuteProperty(), clockModel.secondProperty());
+        ((Rotate) lnHour.getTransforms().get(0)).angleProperty().bind(hourHandRotateAngleBinding);
 
-        double minuteDegree = (minute + second / (double) 60) * 6;
-        ((Rotate) lnMinute.getTransforms().get(0)).setAngle(minuteDegree);
+        Callable<Double> minuteHandRotateAngle = () -> (clockModel.getMinute() + clockModel.getSecond() / (double)
+                60) * 6;
+        DoubleBinding minuteHandRotateAngleBinding = Bindings.createDoubleBinding(minuteHandRotateAngle, clockModel
+                .minuteProperty(), clockModel.secondProperty());
+        ((Rotate) lnMinute.getTransforms().get(0)).angleProperty().bind(minuteHandRotateAngleBinding);
 
-        double secondDegree = second * 6;
-        ((Rotate) lnSecond.getTransforms().get(0)).setAngle(secondDegree);
+        Callable<Double> secondHandRotateAngle = () -> clockModel.getSecond() * (double) 6;
+        DoubleBinding secondHandRotateAngleBinding = Bindings.createDoubleBinding(secondHandRotateAngle, clockModel
+                .secondProperty());
+        ((Rotate) lnSecond.getTransforms().get(0)).angleProperty().bind(secondHandRotateAngleBinding);
+    }
+
+    private void bindViewModel() {
+        lblDate.textProperty().bind(clockModel.dateProperty());
+        lblTime.textProperty().bind(clockModel.timeProperty());
+        vbParent.visibleProperty().bind(paneVisibleModel.clockVisibleProperty());
     }
 }

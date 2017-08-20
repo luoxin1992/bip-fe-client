@@ -3,6 +3,7 @@
  */
 package cn.edu.xmu.bip.ui.main.presenter;
 
+import cn.edu.xmu.bip.ui.main.model.BannerModel;
 import cn.edu.xmu.bip.util.FontUtil;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
@@ -18,6 +19,7 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 
+import javax.inject.Inject;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.concurrent.Callable;
@@ -51,8 +53,16 @@ public class BannerPanePresenter implements Initializable {
     @FXML
     private Label lblProduct;
 
+    @Inject
+    private BannerModel bannerModel;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        bindView();
+        bindViewModel();
+    }
+
+    private void bindView() {
         //公司信息
         hbCompany.prefHeightProperty().bind(apParent.heightProperty());
 
@@ -91,10 +101,15 @@ public class BannerPanePresenter implements Initializable {
         ObjectBinding<Font> productNameFontBinding =
                 Bindings.createObjectBinding(productNameFont, apParent.heightProperty());
         lblProduct.fontProperty().bind(productNameFontBinding);
-        lblProduct.fontProperty().addListener((property, oldValue, newValue) -> {
+        lblProduct.fontProperty().addListener((observable, oldValue, newValue) -> {
             //重绘产品名称左上角用于遮挡的三角形
             polyShelter.getPoints().set(2, lblProduct.getFont().getSize() - rectDecorator.getHeight());
             polyShelter.getPoints().set(5, lblProduct.getFont().getSize() - rectDecorator.getHeight());
         });
+    }
+
+    private void bindViewModel() {
+        ivCompany.imageProperty().bind(bannerModel.logoProperty());
+        lblCompany.textProperty().bind(bannerModel.nameProperty());
     }
 }

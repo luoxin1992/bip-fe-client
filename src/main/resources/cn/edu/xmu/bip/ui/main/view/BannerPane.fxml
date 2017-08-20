@@ -37,7 +37,7 @@
             <points>0.0</points>
             <points>19.0</points>
         </Polygon>
-        <Label fx:id="lblProduct" text="服务型窗口业务交互平台" textFill="#ffffff">
+        <Label fx:id="lblProduct" text="服务窗口业务交互平台" textFill="#ffffff">
             <font>
                 <Font size="24.0"/>
             </font>

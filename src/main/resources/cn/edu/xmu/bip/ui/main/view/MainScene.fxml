@@ -6,13 +6,23 @@
 <BorderPane xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1"
             maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
             prefHeight="600.0" prefWidth="1024.0" style="-fx-background-color: #57068c;"
-            fx:id="bpMain" fx:controller="cn.edu.xmu.bip.ui.main.presenter.MainScenePresenter">
+            fx:id="bpRoot" fx:controller="cn.edu.xmu.bip.ui.main.presenter.MainScenePresenter">
+    <top>
+        <fx:include fx:id="apBanner" source="BannerPane.fxml"/>
+    </top>
     <left>
-        <VBox fx:id="vbLeft" prefWidth="341.0" prefHeight="525.0" alignment="TOP_CENTER">
-            <StackPane fx:id="spLeft" prefWidth="341.0" prefHeight="450.0"/>
+        <VBox>
+            <StackPane>
+                <fx:include fx:id="vbClock" source="ClockPane.fxml"/>
+                <fx:include fx:id="vbUser" source="UserPane.fxml"/>
+            </StackPane>
+            <fx:include fx:id="spDeveloper" source="DeveloperPane.fxml"/>
         </VBox>
     </left>
-    <center>
-        <StackPane fx:id="spCenter" prefWidth="683.0" prefHeight="525.0" alignment="TOP_CENTER"/>
-    </center>
+    <right>
+        <StackPane>
+            <fx:include fx:id="spCounter" source="CounterPane.fxml"/>
+            <fx:include fx:id="vbMessage" source="MessagePane.fxml"/>
+        </StackPane>
+    </right>
 </BorderPane>

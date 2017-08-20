@@ -12,11 +12,15 @@
       alignment="CENTER" prefHeight="525.0" prefWidth="683.0" spacing="32.8125"
       style="-fx-background-radius: 12; -fx-background-insets: 8; -fx-background-color: rgba(255, 255, 255, 0.5);"
       fx:id="vbParent" fx:controller="cn.edu.xmu.bip.ui.main.presenter.MessagePanePresenter">
-    <ImageView fx:id="ivImage" fitHeight="360.9375" fitWidth="469.33" pickOnBounds="true" preserveRatio="true">
-        <Image url="@/image/message-no-image.png"/>
-    </ImageView>
-    <ScrollPane fx:id="spExtra" stylesheets="@../css/common.css" hbarPolicy="NEVER" vbarPolicy="NEVER">
-        <Label fx:id="lblExtra" alignment="CENTER" textFill="#ffffff">
+    <VBox fx:id="vbImage" alignment="CENTER" prefHeight="360.9375" prefWidth="469.33"
+          maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" >
+        <ImageView fx:id="ivImage" fitHeight="360.9375" fitWidth="469.33" pickOnBounds="true" preserveRatio="true">
+            <Image url="@/image/message-unknown.png"/>
+        </ImageView>
+    </VBox>
+
+    <ScrollPane fx:id="spContent" stylesheets="@../css/common.css" hbarPolicy="NEVER" vbarPolicy="NEVER">
+        <Label fx:id="lblContent" alignment="CENTER" textFill="#ffffff">
             <font>
                 <Font size="64.0"/>
             </font>

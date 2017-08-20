@@ -3,6 +3,8 @@
  */
 package cn.edu.xmu.bip.ui.main.presenter;
 
+import cn.edu.xmu.bip.ui.main.model.MessageModel;
+import cn.edu.xmu.bip.ui.main.model.PaneVisibleModel;
 import cn.edu.xmu.bip.util.FontUtil;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -20,6 +22,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
 
+import javax.inject.Inject;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.concurrent.Callable;
@@ -38,19 +41,31 @@ public class MessagePanePresenter implements Initializable {
     private static final double IMAGE_WIDTH_FACTOR = (double) 11 / 16;
     private static final double IMAGE_HEIGHT_FACTOR = (double) 11 / 16;
     //内容高为父布局的1/8
-    private static final double EXTRA_HEIGHT_FACTOR = (double) 1 / 8;
+    private static final double CONTENT_HEIGHT_FACTOR = (double) 1 / 8;
 
     @FXML
     private VBox vbParent;
     @FXML
+    private VBox vbImage;
+    @FXML
     private ImageView ivImage;
     @FXML
-    private ScrollPane spExtra;
+    private ScrollPane spContent;
     @FXML
-    private Label lblExtra;
+    private Label lblContent;
+
+    @Inject
+    private MessageModel messageModel;
+    @Inject
+    private PaneVisibleModel paneVisibleModel;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        bindView();
+        bindViewModel();
+    }
+
+    private void bindView() {
         DoubleBinding parentSpacingBinding = Bindings.multiply(vbParent.heightProperty(), PARENT_SPACING_FACTOR);
         vbParent.spacingProperty().bind(parentSpacingBinding);
 
@@ -60,17 +75,25 @@ public class MessagePanePresenter implements Initializable {
 
         DoubleBinding imageWidthBinding = Bindings.multiply(vbParent.widthProperty(), IMAGE_WIDTH_FACTOR);
         DoubleBinding imageHeightBinding = Bindings.multiply(vbParent.heightProperty(), IMAGE_HEIGHT_FACTOR);
+        vbImage.prefWidthProperty().bind(imageWidthBinding);
+        vbImage.prefHeightProperty().bind(imageHeightBinding);
         ivImage.fitWidthProperty().bind(imageWidthBinding);
         ivImage.fitHeightProperty().bind(imageHeightBinding);
 
-        Callable<Font> extraFont = () -> FontUtil.loadFont(vbParent.getHeight() * EXTRA_HEIGHT_FACTOR, false);
-        ObjectBinding<Font> extraFontBinding = Bindings.createObjectBinding(extraFont, vbParent.heightProperty());
-        lblExtra.fontProperty().bind(extraFontBinding);
+        Callable<Font> contentFont = () -> FontUtil.loadFont(vbParent.getHeight() * CONTENT_HEIGHT_FACTOR, false);
+        ObjectBinding<Font> contentFontBinding = Bindings.createObjectBinding(contentFont, vbParent.heightProperty());
+        lblContent.fontProperty().bind(contentFontBinding);
 
         //监听label宽度变化，当宽度超过父布局scrollPane时，自动移动滚动条，形成跑马灯效果
         Timeline timeline = new Timeline();
         timeline.setCycleCount(Timeline.INDEFINITE);
-        lblExtra.widthProperty().addListener((observable) -> rerunAnimation(timeline));
+        lblContent.widthProperty().addListener((observable) -> rerunAnimation(timeline));
+    }
+
+    private void bindViewModel() {
+        ivImage.imageProperty().bind(messageModel.imageProperty());
+        lblContent.textProperty().bind(messageModel.contentProperty());
+        vbParent.visibleProperty().bind(paneVisibleModel.messageVisibleProperty());
     }
 
     /**
@@ -84,7 +107,7 @@ public class MessagePanePresenter implements Initializable {
             timeline.stop();
         }
         //计算播放时间(ms)
-        double scrollWidth = lblExtra.getWidth() - spExtra.getViewportBounds().getWidth();
+        double scrollWidth = lblContent.getWidth() - spContent.getViewportBounds().getWidth();
         if (scrollWidth <= 0) {
             //无滚动条，不需要滚动
             return;
@@ -94,11 +117,11 @@ public class MessagePanePresenter implements Initializable {
         int playTime = (int) (scrollWidth * 3);
         int waitTime = playTime / 2;
         timeline.getKeyFrames().addAll(
-                new KeyFrame(Duration.millis(0), new KeyValue(spExtra.hvalueProperty(), 0)),
-                new KeyFrame(Duration.millis(playTime), new KeyValue(spExtra.hvalueProperty(), 1)),
-                new KeyFrame(Duration.millis(playTime + waitTime), new KeyValue(spExtra.hvalueProperty(), 1)),
-                new KeyFrame(Duration.millis(playTime + waitTime + playTime), new KeyValue(spExtra.hvalueProperty(), 0)),
-                new KeyFrame(Duration.millis(playTime + waitTime + playTime + waitTime), new KeyValue(spExtra.hvalueProperty(), 0))
+                new KeyFrame(Duration.millis(0), new KeyValue(spContent.hvalueProperty(), 0)),
+                new KeyFrame(Duration.millis(playTime), new KeyValue(spContent.hvalueProperty(), 1)),
+                new KeyFrame(Duration.millis(playTime + waitTime), new KeyValue(spContent.hvalueProperty(), 1)),
+                new KeyFrame(Duration.millis(playTime + waitTime + playTime), new KeyValue(spContent.hvalueProperty(), 0)),
+                new KeyFrame(Duration.millis(playTime + waitTime + playTime + waitTime), new KeyValue(spContent.hvalueProperty(), 0))
         );
         timeline.play();
     }

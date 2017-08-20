@@ -3,8 +3,12 @@
  */
 package cn.edu.xmu.bip.ui.main.model;
 
+import cn.edu.xmu.bip.constant.ResourceConstant;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.scene.image.Image;
 
 /**
  * 主界面-Banner
@@ -14,28 +18,28 @@ import javafx.beans.property.StringProperty;
  */
 public class BannerModel {
     /**
-     * 公司LOGO(URL)
+     * 公司LOGO
      */
-    private StringProperty logo;
+    private ObjectProperty<Image> logo;
     /**
      * 公司名称
      */
     private StringProperty name;
 
     public BannerModel() {
-        logo = new SimpleStringProperty();
+        logo = new SimpleObjectProperty<>(new Image(ResourceConstant.DEFAULT_COMPANY_LOGO, true));
         name = new SimpleStringProperty();
     }
 
-    public String getLogo() {
+    public Image getLogo() {
         return logo.get();
     }
 
-    public StringProperty logoProperty() {
+    public ObjectProperty<Image> logoProperty() {
         return logo;
     }
 
-    public void setLogo(String logo) {
+    public void setLogo(Image logo) {
         this.logo.set(logo);
     }
 
