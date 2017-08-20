@@ -1176,7 +1176,7 @@ public class MessageServiceImpl implements IMessageService {
                                 current.getResources().get(ResourceConstant.INDEX_FI_ERROR);
                         VoiceUtil.add(resource.getVoices(), VoiceUtil.HIGH_PRIORITY);
                         updateMessagePaneAndShow(resource.getImage(),
-                                ((FingerprintEnrollMessage) current).getExtras().get(ResourceConstant.INDEX_FI_ERROR));
+                                ((FingerprintIdentifyMessage) current).getExtras().get(ResourceConstant.INDEX_FI_ERROR));
                     }
 
                     @Override
