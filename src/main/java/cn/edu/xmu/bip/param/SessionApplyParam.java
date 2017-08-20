@@ -9,7 +9,7 @@ import cn.com.lx1992.lib.client.base.param.BaseParam;
  * @author luoxin
  * @version 2017-7-1
  */
-public class SessionOnlineParam extends BaseParam {
+public class SessionApplyParam extends BaseParam {
     /**
      * 窗口ID
      */

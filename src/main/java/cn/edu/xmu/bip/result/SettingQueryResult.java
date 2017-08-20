@@ -11,18 +11,30 @@ import java.util.List;
  * @author luoxin
  * @version 2017-3-27
  */
-public class SettingListResult extends BaseResult {
+public class SettingQueryResult extends BaseResult {
     /**
-     * 设置项
+     * 总记录数
      */
-    private List<Item> item;
+    private Integer total;
+    /**
+     * 查询结果
+     */
+    private List<Item> list;
 
-    public List<Item> getItem() {
-        return item;
+    public Integer getTotal() {
+        return total;
     }
 
-    public void setItem(List<Item> item) {
-        this.item = item;
+    public void setTotal(Integer total) {
+        this.total = total;
+    }
+
+    public List<Item> getList() {
+        return list;
+    }
+
+    public void setList(List<Item> list) {
+        this.list = list;
     }
 
     public static class Item extends BaseResult {
