@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <VBox xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="cn.edu.xmu.bip.ui.admin.presenter.ConfigPresenter">
+      fx:id="vbRoot" fx:controller="cn.edu.xmu.bip.ui.admin.presenter.ConfigPresenter">
     <TitledPane collapsible="false" text="后端环境">
         <VBox spacing="8.0">
             <padding>

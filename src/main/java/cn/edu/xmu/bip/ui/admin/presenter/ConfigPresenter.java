@@ -15,6 +15,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.VBox;
 
 import javax.inject.Inject;
 import java.net.URL;
@@ -27,6 +28,8 @@ import java.util.ResourceBundle;
  * @version 2017-6-26
  */
 public class ConfigPresenter implements Initializable {
+    @FXML
+    private VBox vbRoot;
     /**
      * 后端环境
      */
@@ -71,11 +74,6 @@ public class ConfigPresenter implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         bindViewModel();
         bindEvent();
-
-        //获取当前后端环境
-        getCurrentBackend();
-        //加载本机网卡列表
-        refreshNicList();
     }
 
     private void bindViewModel() {
@@ -94,20 +92,33 @@ public class ConfigPresenter implements Initializable {
     }
 
     private void bindEvent() {
+        //View展示时初始化
+        vbRoot.sceneProperty().addListener((observable, oldValue, newValue) -> {
+            if (oldValue == null && newValue != null) {
+                newValue.getWindow().setOnShown(event -> bindWindowEvent());
+            }
+        });
         //选择预置后端环境
         tgPreset.selectedToggleProperty().addListener(
-                (property, oldValue, newValue) -> getPresetBackend(((RadioButton) newValue).getId()));
+                (observable, oldValue, newValue) -> getPresetBackend(((RadioButton) newValue).getId()));
         //保存后端环境
         btnSave.setOnAction(event -> saveBackend());
         //选择绑定网卡
-        cbNic.valueProperty().addListener((property, oldValue, newValue) -> selectNic());
+        cbNic.valueProperty().addListener((observable, oldValue, newValue) -> selectNic());
         //刷新网卡列表
         btnRefresh.setOnAction(event -> refreshNicList());
         //更新网卡信息
-        tfMac.textProperty().addListener((property, oldValue, newValue) -> queryCounter());
-        tfIp.textProperty().addListener((property, oldValue, newValue) -> queryCounter());
+        tfMac.textProperty().addListener((observable, oldValue, newValue) -> queryCounter());
+        tfIp.textProperty().addListener((observable, oldValue, newValue) -> queryCounter());
         //提交窗口信息
         btnSubmit.setOnAction(event -> submitCounter());
+    }
+
+    private void bindWindowEvent() {
+        //获取当前后端环境
+        getCurrentBackend();
+        //加载本机网卡列表
+        refreshNicList();
     }
 
     private void getCurrentBackend() {

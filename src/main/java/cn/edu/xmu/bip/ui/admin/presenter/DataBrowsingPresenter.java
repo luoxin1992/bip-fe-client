@@ -137,7 +137,7 @@ public class DataBrowsingPresenter implements Initializable {
 
     private void bindEvent() {
         //选择库表
-        tgTable.selectedToggleProperty().addListener((property, oldValue, newValue) -> selectTable(((RadioButton) newValue).getId()));
+        tgTable.selectedToggleProperty().addListener((observable, oldValue, newValue) -> selectTable(((RadioButton) newValue).getId()));
         //查询数据
         btnQuery.setOnAction(event -> queryData(((RadioButton) tgTable.getSelectedToggle()).getId()));
     }
