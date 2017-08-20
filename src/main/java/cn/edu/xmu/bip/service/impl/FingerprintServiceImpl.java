@@ -53,6 +53,7 @@ public class FingerprintServiceImpl implements IFingerprintService {
     @PostConstruct
     private void initialize() {
         fpScannerObject = ClassFactory.createIFPScannerObject();
+        fpScannerObject.connectFpScanner();
         fpScannerEvent = fpScannerObject.advise(IFPScannerEvents.class, new FPScannerEvents());
         logger.info("initialize fingerprint scanner sdk");
     }
@@ -60,6 +61,7 @@ public class FingerprintServiceImpl implements IFingerprintService {
     @PreDestroy
     private void destroy() {
         fpScannerEvent.close();
+        fpScannerObject.disconnectFpScanner();
         fpScannerObject.dispose();
         logger.info("destroy fingerprint scanner sdk");
     }
