@@ -310,7 +310,7 @@ public class MessageServiceImpl implements IMessageService {
         return new Task<Void>() {
             @Override
             protected Void call() throws Exception {
-                checkPreCondition(SERVICE_STATE_BUSY, (String) null);
+                checkPreCondition(SERVICE_STATE_BUSY);
                 //TODO
                 cancelOngoingService();
                 updatePostCondition(SERVICE_STATE_IDLE, null);
@@ -346,7 +346,7 @@ public class MessageServiceImpl implements IMessageService {
         return new Task<Void>() {
             @Override
             protected Void call() throws Exception {
-                checkPreCondition(SERVICE_STATE_IDLE, (String) null);
+                checkPreCondition(SERVICE_STATE_IDLE);
                 updatePostCondition(SERVICE_STATE_STOP, null);
                 return null;
             }
@@ -378,7 +378,7 @@ public class MessageServiceImpl implements IMessageService {
         return new Task<Void>() {
             @Override
             protected Void call() throws Exception {
-                checkPreCondition(SERVICE_STATE_STOP, (String) null);
+                checkPreCondition(SERVICE_STATE_STOP);
                 updatePostCondition(SERVICE_STATE_IDLE, null);
                 return null;
             }
@@ -411,7 +411,7 @@ public class MessageServiceImpl implements IMessageService {
         return new Task<Void>() {
             @Override
             protected Void call() throws Exception {
-                checkPreCondition(SERVICE_STATE_IDLE, (String) null);
+                checkPreCondition(SERVICE_STATE_IDLE);
                 updatePostCondition(SERVICE_STATE_BUSY, SERVICE_TYPE_GENERAL_BUSINESS);
                 scheduleTask(() -> timeoutOngoingService(), ((GeneralBusinessMessage) current).getTimeout());
                 return null;
@@ -515,7 +515,7 @@ public class MessageServiceImpl implements IMessageService {
         return new Task<Void>() {
             @Override
             protected Void call() throws Exception {
-                checkPreCondition(SERVICE_STATE_IDLE, (String) null);
+                checkPreCondition(SERVICE_STATE_IDLE);
                 updatePostCondition(SERVICE_STATE_BUSY, SERVICE_TYPE_FINGERPRINT_ENROLL);
                 scheduleTask(() -> timeoutOngoingService(), ((FingerprintEnrollMessage) current).getTimeout());
 
@@ -624,7 +624,7 @@ public class MessageServiceImpl implements IMessageService {
         return new Task<Void>() {
             @Override
             protected Void call() throws Exception {
-                checkPreCondition(SERVICE_STATE_IDLE, (String) null);
+                checkPreCondition(SERVICE_STATE_IDLE);
                 updatePostCondition(SERVICE_STATE_BUSY, SERVICE_TYPE_FINGERPRINT_IDENTIFY);
                 scheduleTask(() -> timeoutOngoingService(), ((FingerprintIdentifyMessage) current).getTimeout());
 
@@ -784,7 +784,7 @@ public class MessageServiceImpl implements IMessageService {
         return new Task<Void>() {
             @Override
             protected Void call() throws Exception {
-                checkPreCondition(SERVICE_STATE_IDLE, (String) null);
+                checkPreCondition(SERVICE_STATE_IDLE);
                 //单独更新用户信息一般是没有意义的，故超时仅为5秒
                 //通常情况下，超时时间内会收到下一条超时更长的消息
                 scheduleTask(returnHome(), USER_SHOW_ONLY_TIMEOUT);
@@ -1221,7 +1221,7 @@ public class MessageServiceImpl implements IMessageService {
                                 current.getResources().get(ResourceConstant.INDEX_FE_2ND);
                         VoiceUtil.add(resource.getVoices(), VoiceUtil.HIGH_PRIORITY);
                         updateMessagePaneAndShow(resource.getImage(),
-                                ((FingerprintIdentifyMessage) current).getExtras().get(ResourceConstant.INDEX_FE_2ND));
+                                ((FingerprintEnrollMessage) current).getExtras().get(ResourceConstant.INDEX_FE_2ND));
                     }
 
                     @Override
@@ -1244,7 +1244,7 @@ public class MessageServiceImpl implements IMessageService {
                                 current.getResources().get(ResourceConstant.INDEX_FE_3RD);
                         VoiceUtil.add(resource.getVoices(), VoiceUtil.HIGH_PRIORITY);
                         updateMessagePaneAndShow(resource.getImage(),
-                                ((FingerprintIdentifyMessage) current).getExtras().get(ResourceConstant.INDEX_FE_3RD));
+                                ((FingerprintEnrollMessage) current).getExtras().get(ResourceConstant.INDEX_FE_3RD));
                     }
 
                     @Override
@@ -1267,7 +1267,7 @@ public class MessageServiceImpl implements IMessageService {
                                 current.getResources().get(ResourceConstant.INDEX_FE_4TH);
                         VoiceUtil.add(resource.getVoices(), VoiceUtil.HIGH_PRIORITY);
                         updateMessagePaneAndShow(resource.getImage(),
-                                ((FingerprintIdentifyMessage) current).getExtras().get(ResourceConstant.INDEX_FE_4TH));
+                                ((FingerprintEnrollMessage) current).getExtras().get(ResourceConstant.INDEX_FE_4TH));
                     }
 
                     @Override
