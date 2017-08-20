@@ -53,7 +53,7 @@ public class AdminServiceImpl implements IAdminService {
     private static final String CONFIG_BACKEND_PRESET_FILE = "/file/preset-backend.json";
     private static final String CONFIG_BACKEND_KEY_API = "api";
     private static final String CONFIG_BACKEND_KEY_WS = "ws";
-    private static final int CONFIG_COUNTER_UNBIND_ERROR_CODE = 20308;
+    private static final int CONFIG_COUNTER_UNBIND_ERROR_CODE = 20408;
     private static final int DATA_BROWSING_MAX_QUERY_COUNT = 1000;
 
     private final Logger logger = LoggerFactory.getLogger(AdminServiceImpl.class);
