@@ -52,7 +52,7 @@ public class DAOFactory {
             case FINGERPRINT:
                 return fingerprintDAO;
             default:
-                throw new ClientException(ClientExceptionEnum.SINGLETON_FACTORY_INVALID_DAO_NAME);
+                throw new ClientException(ClientExceptionEnum.INVALID_DAO_NAME);
         }
     }
 }

@@ -35,7 +35,7 @@ class BaseDAOImpl implements IBaseDAO {
 
     static {
         //拼接数据库路径
-        DB_URL = DB_URL_PREFIX + NativeUtil.getAppDataDirectoryPath("db") + File.separatorChar + DB_FILE_NAME;
+        DB_URL = DB_URL_PREFIX + NativeUtil.getAppDataDirectoryPath("database") + File.separatorChar + DB_FILE_NAME;
         //加载数据库驱动
         try {
             Class.forName(DB_DRIVER);
@@ -160,12 +160,11 @@ class BaseDAOImpl implements IBaseDAO {
 
     /**
      * 获取数据库连接
-     * 同步方法防止对SQLite多线程写产生并发错误
      *
      * @return 数据库连接
      * @throws SQLException 发生数据库错误
      */
-    private synchronized Connection getConnection() throws SQLException {
+    private Connection getConnection() throws SQLException {
         return DriverManager.getConnection(DB_URL);
     }
 }
