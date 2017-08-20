@@ -245,7 +245,7 @@ public class AdminServiceImpl implements IAdminService {
                 return allNic.stream().collect(Collectors.toMap(
                         //展示格式：索引号|名称
                         nic -> nic.getIndex() + "|" + nic.getName(),
-                        nic -> Objects.equals(nic.getIndex(), Integer.parseInt(bindNic))));
+                        nic -> bindNic != null && Objects.equals(nic.getIndex(), Integer.parseInt(bindNic))));
             }
 
             @Override
