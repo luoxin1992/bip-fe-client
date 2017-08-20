@@ -12,5 +12,5 @@
     </padding>
     <Label text="本软件使用了多个开源项目。"/>
     <Label text="根据相关许可协议之要求，需保留以下未经修改的版权声明、许可条件及免责条款。"/>
-    <WebView fx:id="wvCopyright" contextMenuEnabled="false"/>
+    <WebView fx:id="wvCopyright"/>
 </VBox>

@@ -31,7 +31,7 @@ public class OpenSourcePresenter implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //疑似JDK BUG 该属性无法在FXML中配置
-        //wvCopyright.setContextMenuEnabled(false);
+        wvCopyright.setContextMenuEnabled(false);
         try {
             URI uri = getClass().getResource(HTML_FILE_PATH).toURI();
             wvCopyright.getEngine().load(uri.toString());
