@@ -1295,7 +1295,7 @@ public class MessageServiceImpl implements IMessageService {
                         current.getResources().get(ResourceConstant.INDEX_FE_WAIT);
                 VoiceUtil.add(resource.getVoices(), VoiceUtil.HIGH_PRIORITY);
                 updateMessagePaneAndShow(resource.getImage(),
-                        ((FingerprintIdentifyMessage) current).getExtras().get(ResourceConstant.INDEX_FE_WAIT));
+                        ((FingerprintEnrollMessage) current).getExtras().get(ResourceConstant.INDEX_FE_WAIT));
                 logger.error("perform fingerprint enroll template callback for message {}", current.getUid());
             }
 
