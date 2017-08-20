@@ -1,8 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-
 <?import javafx.scene.layout.BorderPane?>
 <BorderPane xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1"
+            maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
             prefHeight="600.0" prefWidth="1024.0"
-            fx:id="bpSplash" fx:controller="cn.edu.xmu.bip.ui.splash.presenter.SplashScenePresenter">
+            fx:id="bpRoot" fx:controller="cn.edu.xmu.bip.ui.splash.presenter.SplashScenePresenter">
+    <top>
+        <fx:include fx:id="spProduct" source="ProductPane.fxml"/>
+    </top>
+    <left>
+        <fx:include fx:id="hbPartner" source="PartnerPane.fxml"/>
+    </left>
+    <right>
+        <fx:include fx:id="hbLoading" source="LoadingPane.fxml"/>
+    </right>
 </BorderPane>
+

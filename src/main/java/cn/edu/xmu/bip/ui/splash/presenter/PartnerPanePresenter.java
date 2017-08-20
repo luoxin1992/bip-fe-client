@@ -37,6 +37,10 @@ public class PartnerPanePresenter implements Initializable {
     private ImageView ivMtyun;
 
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        bindView();
+    }
+
+    private void bindView() {
         DoubleBinding partnerHeightBinding = Bindings.multiply(hbParent.heightProperty(), PARTNER_HEIGHT_FACTOR);
         ivCrossmatch.fitHeightProperty().bind(partnerHeightBinding);
         ivDivider1.fitHeightProperty().bind(partnerHeightBinding);

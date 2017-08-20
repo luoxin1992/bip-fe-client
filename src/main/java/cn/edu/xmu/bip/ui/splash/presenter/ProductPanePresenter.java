@@ -54,6 +54,10 @@ public class ProductPanePresenter implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        bindView();
+    }
+
+    private void bindView() {
         Group animation = createBubbleAnimation(paneAnimation.prefWidthProperty(), paneAnimation.prefHeightProperty());
         paneAnimation.getChildren().add(animation);
         paneAnimation.prefWidthProperty().bind(spParent.widthProperty());

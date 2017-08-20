@@ -14,23 +14,40 @@ import javafx.beans.property.StringProperty;
  */
 public class LoadingModel {
     /**
-     * 加载状态
+     * 提示
      */
-    private StringProperty status;
+    private StringProperty message;
+    /**
+     * 进度
+     */
+    private StringProperty progress;
 
     public LoadingModel() {
-        status = new SimpleStringProperty();
+        message = new SimpleStringProperty();
+        progress = new SimpleStringProperty();
     }
 
-    public String getStatus() {
-        return status.get();
+    public String getMessage() {
+        return message.get();
     }
 
-    public StringProperty statusProperty() {
-        return status;
+    public StringProperty messageProperty() {
+        return message;
     }
 
-    public void setStatus(String status) {
-        this.status.set(status);
+    public void setMessage(String message) {
+        this.message.set(message);
+    }
+
+    public String getProgress() {
+        return progress.get();
+    }
+
+    public StringProperty progressProperty() {
+        return progress;
+    }
+
+    public void setProgress(String progress) {
+        this.progress.set(progress);
     }
 }

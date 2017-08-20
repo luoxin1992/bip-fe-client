@@ -3,6 +3,7 @@
  */
 package cn.edu.xmu.bip.ui.splash.presenter;
 
+import cn.edu.xmu.bip.ui.splash.model.LoadingModel;
 import cn.edu.xmu.bip.util.FontUtil;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
@@ -14,6 +15,7 @@ import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 
+import javax.inject.Inject;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.concurrent.Callable;
@@ -29,18 +31,28 @@ public class LoadingPanePresenter implements Initializable {
     private static final double PARENT_SPACING_FACTOR = (double) 1 / 15;
     //指示器半径为父布局高的1/3
     private static final double LOADING_RADIUS_FACTOR = (double) 1 / 3;
-    //状态文本字体为父布局高的1/3
-    private static final double STATUS_HEIGHT_FACTOR = (double) 1 / 3;
+    //提示/进度字体为父布局高的1/3
+    private static final double MESSAGE_PROGRESS_HEIGHT_FACTOR = (double) 1 / 3;
 
     @FXML
     private HBox hbParent;
     @FXML
     private ProgressIndicator piLoading;
     @FXML
-    private Label lblStatus;
+    private Label lblMessage;
+    @FXML
+    private Label lblProgress;
+
+    @Inject
+    private LoadingModel loadingModel;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        bindView();
+        bindViewModel();
+    }
+
+    private void bindView() {
         DoubleBinding parentSpacingBinding = Bindings.multiply(hbParent.heightProperty(), PARENT_SPACING_FACTOR);
         hbParent.spacingProperty().bind(parentSpacingBinding);
 
@@ -48,8 +60,14 @@ public class LoadingPanePresenter implements Initializable {
         piLoading.prefWidthProperty().bind(indicatorRadiusBinding);
         piLoading.prefHeightProperty().bind(indicatorRadiusBinding);
 
-        Callable<Font> statusFont = () -> FontUtil.loadFont(hbParent.getHeight() * STATUS_HEIGHT_FACTOR, false);
-        ObjectBinding<Font> statusFontBinding = Bindings.createObjectBinding(statusFont, hbParent.heightProperty());
-        lblStatus.fontProperty().bind(statusFontBinding);
+        Callable<Font> labelFont = () -> FontUtil.loadFont(hbParent.getHeight() * MESSAGE_PROGRESS_HEIGHT_FACTOR, false);
+        ObjectBinding<Font> labelFontBinding = Bindings.createObjectBinding(labelFont, hbParent.heightProperty());
+        lblMessage.fontProperty().bind(labelFontBinding);
+        lblProgress.fontProperty().bind(labelFontBinding);
+    }
+
+    private void bindViewModel() {
+        lblMessage.textProperty().bind(loadingModel.messageProperty());
+        lblProgress.textProperty().bind(loadingModel.progressProperty());
     }
 }
