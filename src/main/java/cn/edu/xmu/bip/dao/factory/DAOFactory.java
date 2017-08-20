@@ -3,6 +3,7 @@
  */
 package cn.edu.xmu.bip.dao.factory;
 
+import cn.com.lx1992.lib.client.inject.Implement;
 import cn.edu.xmu.bip.dao.IBaseDAO;
 import cn.edu.xmu.bip.dao.IFingerprintDAO;
 import cn.edu.xmu.bip.dao.IMessageDAO;
@@ -12,7 +13,6 @@ import cn.edu.xmu.bip.dao.impl.MessageDAOImpl;
 import cn.edu.xmu.bip.dao.impl.ResourceDAOImpl;
 import cn.edu.xmu.bip.exception.ClientException;
 import cn.edu.xmu.bip.exception.ClientExceptionEnum;
-import cn.edu.xmu.bip.inject.Implement;
 
 import javax.inject.Inject;
 
