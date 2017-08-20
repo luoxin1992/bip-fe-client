@@ -321,7 +321,9 @@ public class MessageServiceImpl implements IMessageService {
             protected void succeeded() {
                 BaseReceiveMessage.Resource resource = current.getResources().get(ResourceConstant.INDEX_DEFAULT);
                 VoiceUtil.add(resource.getVoices(), VoiceUtil.HIGH_PRIORITY);
-                returnHome();
+                //立即返回主屏幕，等同于立即调用returnHome()
+                clearUserPaneAndHide();
+                clearMessagePaneAndHide();
                 logger.info("process {} message {}", current.getType(), current.getUid());
             }
 
@@ -446,7 +448,7 @@ public class MessageServiceImpl implements IMessageService {
             protected Void call() throws Exception {
                 checkPreCondition(SERVICE_STATE_BUSY, SERVICE_TYPE_GENERAL_BUSINESS);
                 updatePostCondition(SERVICE_STATE_IDLE, null);
-                scheduleTask(() -> returnHome(), RETURN_HOME_TIMEOUT);
+                scheduleTask(returnHome(), RETURN_HOME_TIMEOUT);
                 return null;
             }
 
@@ -480,7 +482,7 @@ public class MessageServiceImpl implements IMessageService {
             protected Void call() throws Exception {
                 checkPreCondition(SERVICE_STATE_BUSY, SERVICE_TYPE_GENERAL_BUSINESS);
                 updatePostCondition(SERVICE_STATE_IDLE, null);
-                scheduleTask(() -> returnHome(), RETURN_HOME_TIMEOUT);
+                scheduleTask(returnHome(), RETURN_HOME_TIMEOUT);
                 return null;
             }
 
@@ -555,7 +557,7 @@ public class MessageServiceImpl implements IMessageService {
             protected Void call() throws Exception {
                 checkPreCondition(SERVICE_STATE_BUSY, SERVICE_TYPE_FINGERPRINT_ENROLL);
                 updatePostCondition(SERVICE_STATE_IDLE, null);
-                scheduleTask(() -> returnHome(), RETURN_HOME_TIMEOUT);
+                scheduleTask(returnHome(), RETURN_HOME_TIMEOUT);
                 return null;
             }
 
@@ -589,7 +591,7 @@ public class MessageServiceImpl implements IMessageService {
             protected Void call() throws Exception {
                 checkPreCondition(SERVICE_STATE_BUSY, SERVICE_TYPE_FINGERPRINT_ENROLL);
                 updatePostCondition(SERVICE_STATE_IDLE, null);
-                scheduleTask(() -> returnHome(), RETURN_HOME_TIMEOUT);
+                scheduleTask(returnHome(), RETURN_HOME_TIMEOUT);
                 return null;
             }
 
@@ -662,7 +664,7 @@ public class MessageServiceImpl implements IMessageService {
             @Override
             protected Void call() throws Exception {
                 checkPreCondition(SERVICE_STATE_BUSY, SERVICE_TYPE_FINGERPRINT_IDENTIFY);
-                scheduleTask(() -> returnHome(), RETURN_HOME_TIMEOUT);
+                scheduleTask(returnHome(), RETURN_HOME_TIMEOUT);
                 updatePostCondition(SERVICE_STATE_IDLE, null);
                 return null;
             }
@@ -696,7 +698,7 @@ public class MessageServiceImpl implements IMessageService {
             @Override
             protected Void call() throws Exception {
                 checkPreCondition(SERVICE_STATE_BUSY, SERVICE_TYPE_FINGERPRINT_IDENTIFY);
-                scheduleTask(() -> returnHome(), RETURN_HOME_TIMEOUT);
+                scheduleTask(returnHome(), RETURN_HOME_TIMEOUT);
                 updatePostCondition(SERVICE_STATE_IDLE, null);
                 return null;
             }
@@ -785,7 +787,7 @@ public class MessageServiceImpl implements IMessageService {
                 checkPreCondition(SERVICE_STATE_IDLE, (String) null);
                 //单独更新用户信息一般是没有意义的，故超时仅为5秒
                 //通常情况下，超时时间内会收到下一条超时更长的消息
-                scheduleTask(() -> returnHome(), USER_SHOW_ONLY_TIMEOUT);
+                scheduleTask(returnHome(), USER_SHOW_ONLY_TIMEOUT);
                 return null;
             }
 
@@ -877,7 +879,7 @@ public class MessageServiceImpl implements IMessageService {
                     @Override
                     protected Void call() throws Exception {
                         updatePostCondition(SERVICE_STATE_IDLE, null);
-                        scheduleTask(() -> returnHome(), RETURN_HOME_TIMEOUT);
+                        scheduleTask(returnHome(), RETURN_HOME_TIMEOUT);
                         return null;
                     }
 
@@ -907,7 +909,7 @@ public class MessageServiceImpl implements IMessageService {
 
                         updatePostCondition(SERVICE_STATE_IDLE, null);
                         replyFingerprintEnroll(current.getUid(), FINGERPRINT_STATUS_TIMEOUT, null);
-                        scheduleTask(() -> returnHome(), RETURN_HOME_TIMEOUT);
+                        scheduleTask(returnHome(), RETURN_HOME_TIMEOUT);
                         return null;
                     }
 
@@ -938,7 +940,7 @@ public class MessageServiceImpl implements IMessageService {
 
                         updatePostCondition(SERVICE_STATE_IDLE, null);
                         replyFingerprintIdentify(current.getUid(), FINGERPRINT_STATUS_TIMEOUT, null);
-                        scheduleTask(() -> returnHome(), RETURN_HOME_TIMEOUT);
+                        scheduleTask(returnHome(), RETURN_HOME_TIMEOUT);
                         return null;
                     }
 
@@ -965,9 +967,19 @@ public class MessageServiceImpl implements IMessageService {
     /**
      * 返回主屏
      */
-    private void returnHome() {
-        clearUserPaneAndHide();
-        clearMessagePaneAndHide();
+    private Task<Void> returnHome() {
+        return new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                return null;
+            }
+
+            @Override
+            protected void succeeded() {
+                clearUserPaneAndHide();
+                clearMessagePaneAndHide();
+            }
+        };
     }
 
     /**
@@ -1140,7 +1152,7 @@ public class MessageServiceImpl implements IMessageService {
                     protected Void call() throws Exception {
                         updatePostCondition(SERVICE_STATE_IDLE, null);
                         replyFingerprintEnroll(current.getUid(), FINGERPRINT_STATUS_ERROR, null);
-                        scheduleTask(() -> returnHome(), RETURN_HOME_TIMEOUT);
+                        scheduleTask(returnHome(), RETURN_HOME_TIMEOUT);
                         return null;
                     }
 
@@ -1166,7 +1178,7 @@ public class MessageServiceImpl implements IMessageService {
                     protected Void call() throws Exception {
                         updatePostCondition(SERVICE_STATE_IDLE, null);
                         replyFingerprintIdentify(current.getUid(), FINGERPRINT_STATUS_ERROR, null);
-                        scheduleTask(() -> returnHome(), RETURN_HOME_TIMEOUT);
+                        scheduleTask(returnHome(), RETURN_HOME_TIMEOUT);
                         return null;
                     }
 
