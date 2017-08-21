@@ -194,6 +194,14 @@ public class FingerprintServiceImpl implements IFingerprintService {
         public void onFpScannerDisConnect(boolean disConnect, String readerSerNum) {
             createLog(FingerprintEventEnum.SCANNER_DISCONNECT, readerSerNum);
             logger.info("disconnect fingerprint scanner {}", readerSerNum);
+
+            //指纹仪在工作中断开连接
+            if(fpScannerObject.getStateMark()!=STATE_MARK_IDLE){
+                cancel();
+                //回调
+                IMessageService messageService = (IMessageService) serviceFactory.getInstance(ServiceFactory.MESSAGE);
+                messageService.onFingerprintScannerError();
+            }
         }
 
         @Override
