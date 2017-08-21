@@ -192,7 +192,6 @@ public class MessageServiceImpl implements IMessageService {
         messageDAO.insert(uid, type, body);
     }
 
-
     //消息处理逻辑
     //-----------------------------------------------------------------------
 
@@ -206,6 +205,7 @@ public class MessageServiceImpl implements IMessageService {
      */
     private Task<Void> process(MessageTypeEnum type, String body) {
         //二次解析出的消息保存到类变量中，处理过程中需要被共享
+        //TODO 前一条消息处理后、等待中，若错误收到消息，因此变量被覆盖导致后续步骤异常
         switch (type) {
             case SERVICE_CANCEL:
                 current = JsonUtil.toObject(body, ServiceCancelMessage.class);
@@ -311,8 +311,15 @@ public class MessageServiceImpl implements IMessageService {
             @Override
             protected Void call() throws Exception {
                 checkPreCondition(SERVICE_STATE_BUSY);
-                //TODO
-                cancelOngoingService();
+
+                //如果当前业务类型为指纹登记/辨识，需要取消SDK操作
+                String type = PreferencesUtil.get(PreferenceKeyConstant.SERVICE_TYPE);
+                if (StringUtils.equalsAny(type, SERVICE_TYPE_FINGERPRINT_ENROLL, SERVICE_TYPE_FINGERPRINT_IDENTIFY)) {
+                    IFingerprintService fingerprintService =
+                            (IFingerprintService) serviceFactory.getInstance(ServiceFactory.FINGERPRINT);
+                    fingerprintService.cancel();
+                }
+
                 updatePostCondition(SERVICE_STATE_IDLE, null);
                 return null;
             }
@@ -321,7 +328,7 @@ public class MessageServiceImpl implements IMessageService {
             protected void succeeded() {
                 BaseReceiveMessage.Resource resource = current.getResources().get(ResourceConstant.INDEX_DEFAULT);
                 VoiceUtil.add(resource.getVoices(), VoiceUtil.HIGH_PRIORITY);
-                //立即返回主屏幕，等同于立即调用returnHome()
+                //立即返回主屏幕
                 clearUserPaneAndHide();
                 clearMessagePaneAndHide();
                 logger.info("process {} message {}", current.getType(), current.getUid());
@@ -412,8 +419,8 @@ public class MessageServiceImpl implements IMessageService {
             @Override
             protected Void call() throws Exception {
                 checkPreCondition(SERVICE_STATE_IDLE);
+                scheduleTask(timeoutGeneralBusiness(), ((GeneralBusinessMessage) current).getTimeout());
                 updatePostCondition(SERVICE_STATE_BUSY, SERVICE_TYPE_GENERAL_BUSINESS);
-                scheduleTask(() -> timeoutOngoingService(), ((GeneralBusinessMessage) current).getTimeout());
                 return null;
             }
 
@@ -447,8 +454,8 @@ public class MessageServiceImpl implements IMessageService {
             @Override
             protected Void call() throws Exception {
                 checkPreCondition(SERVICE_STATE_BUSY, SERVICE_TYPE_GENERAL_BUSINESS);
-                updatePostCondition(SERVICE_STATE_IDLE, null);
                 scheduleTask(returnHome(), RETURN_HOME_TIMEOUT);
+                updatePostCondition(SERVICE_STATE_IDLE, null);
                 return null;
             }
 
@@ -481,8 +488,8 @@ public class MessageServiceImpl implements IMessageService {
             @Override
             protected Void call() throws Exception {
                 checkPreCondition(SERVICE_STATE_BUSY, SERVICE_TYPE_GENERAL_BUSINESS);
-                updatePostCondition(SERVICE_STATE_IDLE, null);
                 scheduleTask(returnHome(), RETURN_HOME_TIMEOUT);
+                updatePostCondition(SERVICE_STATE_IDLE, null);
                 return null;
             }
 
@@ -516,12 +523,13 @@ public class MessageServiceImpl implements IMessageService {
             @Override
             protected Void call() throws Exception {
                 checkPreCondition(SERVICE_STATE_IDLE);
-                updatePostCondition(SERVICE_STATE_BUSY, SERVICE_TYPE_FINGERPRINT_ENROLL);
-                scheduleTask(() -> timeoutOngoingService(), ((FingerprintEnrollMessage) current).getTimeout());
+                scheduleTask(timeoutFingerprintEnroll(), ((FingerprintEnrollMessage) current).getTimeout());
 
                 IFingerprintService fingerprintService =
                         (IFingerprintService) serviceFactory.getInstance(ServiceFactory.FINGERPRINT);
                 fingerprintService.enroll(((FingerprintEnrollMessage) current).getTimes());
+
+                updatePostCondition(SERVICE_STATE_BUSY, SERVICE_TYPE_FINGERPRINT_ENROLL);
                 return null;
             }
 
@@ -529,9 +537,9 @@ public class MessageServiceImpl implements IMessageService {
             protected void succeeded() {
                 BaseReceiveMessage.Resource resource =
                         current.getResources().get(ResourceConstant.INDEX_FE_1ST);
+                VoiceUtil.add(resource.getVoices(), VoiceUtil.LOW_PRIORITY);
                 updateMessagePaneAndShow(resource.getImage(),
                         ((FingerprintEnrollMessage) current).getExtras().get(ResourceConstant.INDEX_FE_1ST));
-                VoiceUtil.add(resource.getVoices(), VoiceUtil.HIGH_PRIORITY);
                 logger.info("process {} message {}", current.getType(), current.getUid());
             }
 
@@ -556,8 +564,8 @@ public class MessageServiceImpl implements IMessageService {
             @Override
             protected Void call() throws Exception {
                 checkPreCondition(SERVICE_STATE_BUSY, SERVICE_TYPE_FINGERPRINT_ENROLL);
-                updatePostCondition(SERVICE_STATE_IDLE, null);
                 scheduleTask(returnHome(), RETURN_HOME_TIMEOUT);
+                updatePostCondition(SERVICE_STATE_IDLE, null);
                 return null;
             }
 
@@ -590,8 +598,8 @@ public class MessageServiceImpl implements IMessageService {
             @Override
             protected Void call() throws Exception {
                 checkPreCondition(SERVICE_STATE_BUSY, SERVICE_TYPE_FINGERPRINT_ENROLL);
-                updatePostCondition(SERVICE_STATE_IDLE, null);
                 scheduleTask(returnHome(), RETURN_HOME_TIMEOUT);
+                updatePostCondition(SERVICE_STATE_IDLE, null);
                 return null;
             }
 
@@ -625,19 +633,20 @@ public class MessageServiceImpl implements IMessageService {
             @Override
             protected Void call() throws Exception {
                 checkPreCondition(SERVICE_STATE_IDLE);
-                updatePostCondition(SERVICE_STATE_BUSY, SERVICE_TYPE_FINGERPRINT_IDENTIFY);
-                scheduleTask(() -> timeoutOngoingService(), ((FingerprintIdentifyMessage) current).getTimeout());
+                scheduleTask(timeoutFingerprintIdentify(), ((FingerprintIdentifyMessage) current).getTimeout());
 
                 IFingerprintService fingerprintService =
                         (IFingerprintService) serviceFactory.getInstance(ServiceFactory.FINGERPRINT);
                 fingerprintService.identify();
+
+                updatePostCondition(SERVICE_STATE_BUSY, SERVICE_TYPE_FINGERPRINT_IDENTIFY);
                 return null;
             }
 
             @Override
             protected void succeeded() {
                 BaseReceiveMessage.Resource resource = current.getResources().get(ResourceConstant.INDEX_FI);
-                VoiceUtil.add(resource.getVoices(), VoiceUtil.HIGH_PRIORITY);
+                VoiceUtil.add(resource.getVoices(), VoiceUtil.LOW_PRIORITY);
                 updateMessagePaneAndShow(resource.getImage(),
                         ((FingerprintIdentifyMessage) current).getExtras().get(ResourceConstant.INDEX_FI));
                 logger.info("process {} message {}", current.getType(), current.getUid());
@@ -853,119 +862,7 @@ public class MessageServiceImpl implements IMessageService {
     }
 
     /**
-     * 业务取消
-     * <p>
-     * 1.前置条件 状态=忙碌
-     * 2.后置条件 状态=空闲
-     */
-    private void cancelOngoingService() {
-        String type = PreferencesUtil.get(PreferenceKeyConstant.SERVICE_TYPE);
-        //指纹登记/辨识：取消SDK操作
-        if (StringUtils.equalsAny(type, SERVICE_TYPE_FINGERPRINT_ENROLL, SERVICE_TYPE_FINGERPRINT_IDENTIFY)) {
-            IFingerprintService fingerprintService =
-                    (IFingerprintService) serviceFactory.getInstance(ServiceFactory.FINGERPRINT);
-            fingerprintService.cancel();
-        }
-    }
-
-    /**
-     * 业务超时
-     */
-    private void timeoutOngoingService() {
-        String type = PreferencesUtil.get(PreferenceKeyConstant.SERVICE_TYPE);
-        switch (type) {
-            case SERVICE_TYPE_GENERAL_BUSINESS:
-                CompletableFuture.runAsync(new Task<Void>() {
-                    @Override
-                    protected Void call() throws Exception {
-                        updatePostCondition(SERVICE_STATE_IDLE, null);
-                        scheduleTask(returnHome(), RETURN_HOME_TIMEOUT);
-                        return null;
-                    }
-
-                    @Override
-                    protected void succeeded() {
-                        BaseReceiveMessage.Resource resource =
-                                current.getResources().get(ResourceConstant.INDEX_GB_TIMEOUT);
-                        VoiceUtil.add(resource.getVoices(), VoiceUtil.HIGH_PRIORITY);
-                        updateMessagePaneAndShow(resource.getImage(),
-                                ((GeneralBusinessMessage) current).getExtras().get(ResourceConstant.INDEX_GB_TIMEOUT));
-                    }
-
-                    @Override
-                    protected void failed() {
-                        logger.error("process {} message {} failed when service timeout",
-                                current.getType(), current.getUid(), getException());
-                    }
-                }, executor);
-                break;
-            case SERVICE_TYPE_FINGERPRINT_ENROLL:
-                CompletableFuture.runAsync(new Task<Void>() {
-                    @Override
-                    protected Void call() throws Exception {
-                        IFingerprintService fingerprintService =
-                                (IFingerprintService) serviceFactory.getInstance(ServiceFactory.FINGERPRINT);
-                        fingerprintService.cancel();
-
-                        updatePostCondition(SERVICE_STATE_IDLE, null);
-                        replyFingerprintEnroll(current.getUid(), FINGERPRINT_STATUS_TIMEOUT, null);
-                        scheduleTask(returnHome(), RETURN_HOME_TIMEOUT);
-                        return null;
-                    }
-
-                    @Override
-                    protected void succeeded() {
-                        BaseReceiveMessage.Resource resource =
-                                current.getResources().get(ResourceConstant.INDEX_FE_TIMEOUT);
-                        VoiceUtil.add(resource.getVoices(), VoiceUtil.HIGH_PRIORITY);
-                        updateMessagePaneAndShow(resource.getImage(),
-                                ((FingerprintEnrollMessage) current).getExtras().get(ResourceConstant
-                                        .INDEX_FE_TIMEOUT));
-                    }
-
-                    @Override
-                    protected void failed() {
-                        logger.error("process {} message {} failed when service timeout",
-                                current.getType(), current.getUid(), getException());
-                    }
-                }, executor);
-                break;
-            case SERVICE_TYPE_FINGERPRINT_IDENTIFY:
-                CompletableFuture.runAsync(new Task<Void>() {
-                    @Override
-                    protected Void call() throws Exception {
-                        IFingerprintService fingerprintService =
-                                (IFingerprintService) serviceFactory.getInstance(ServiceFactory.FINGERPRINT);
-                        fingerprintService.cancel();
-
-                        updatePostCondition(SERVICE_STATE_IDLE, null);
-                        replyFingerprintIdentify(current.getUid(), FINGERPRINT_STATUS_TIMEOUT, null);
-                        scheduleTask(returnHome(), RETURN_HOME_TIMEOUT);
-                        return null;
-                    }
-
-                    @Override
-                    protected void succeeded() {
-                        BaseReceiveMessage.Resource resource =
-                                current.getResources().get(ResourceConstant.INDEX_FI_TIMEOUT);
-                        VoiceUtil.add(resource.getVoices(), VoiceUtil.HIGH_PRIORITY);
-                        updateMessagePaneAndShow(resource.getImage(),
-                                ((FingerprintIdentifyMessage) current).getExtras().get(ResourceConstant
-                                        .INDEX_FI_TIMEOUT));
-                    }
-
-                    @Override
-                    protected void failed() {
-                        logger.error("process {} message {} failed when service timeout",
-                                current.getType(), current.getUid(), getException());
-                    }
-                }, executor);
-                break;
-        }
-    }
-
-    /**
-     * 返回主屏
+     * 返回主屏幕
      */
     private Task<Void> returnHome() {
         return new Task<Void>() {
@@ -978,6 +875,105 @@ public class MessageServiceImpl implements IMessageService {
             protected void succeeded() {
                 clearUserPaneAndHide();
                 clearMessagePaneAndHide();
+            }
+        };
+    }
+
+    /**
+     * 一般业务超时
+     */
+    private Task<Void> timeoutGeneralBusiness() {
+        return new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                scheduleTask(returnHome(), RETURN_HOME_TIMEOUT);
+                updatePostCondition(SERVICE_STATE_IDLE, null);
+                return null;
+            }
+
+            @Override
+            protected void succeeded() {
+                BaseReceiveMessage.Resource resource =
+                        current.getResources().get(ResourceConstant.INDEX_GB_TIMEOUT);
+                VoiceUtil.add(resource.getVoices(), VoiceUtil.HIGH_PRIORITY);
+                updateMessagePaneAndShow(resource.getImage(),
+                        ((GeneralBusinessMessage) current).getExtras().get(ResourceConstant.INDEX_GB_TIMEOUT));
+            }
+
+            @Override
+            protected void failed() {
+                logger.error("process {} message {} failed when service timeout",
+                        current.getType(), current.getUid(), getException());
+            }
+        };
+    }
+
+    /**
+     * 指纹登记超时
+     */
+    private Task<Void> timeoutFingerprintEnroll() {
+        return new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                replyFingerprintEnroll(current.getUid(), FINGERPRINT_STATUS_TIMEOUT, null);
+                scheduleTask(returnHome(), RETURN_HOME_TIMEOUT);
+
+                IFingerprintService fingerprintService =
+                        (IFingerprintService) serviceFactory.getInstance(ServiceFactory.FINGERPRINT);
+                fingerprintService.cancel();
+
+                updatePostCondition(SERVICE_STATE_IDLE, null);
+                return null;
+            }
+
+            @Override
+            protected void succeeded() {
+                BaseReceiveMessage.Resource resource =
+                        current.getResources().get(ResourceConstant.INDEX_FE_TIMEOUT);
+                VoiceUtil.add(resource.getVoices(), VoiceUtil.HIGH_PRIORITY);
+                updateMessagePaneAndShow(resource.getImage(),
+                        ((FingerprintEnrollMessage) current).getExtras().get(ResourceConstant.INDEX_FE_TIMEOUT));
+            }
+
+            @Override
+            protected void failed() {
+                logger.error("process {} message {} failed when service timeout",
+                        current.getType(), current.getUid(), getException());
+            }
+        };
+    }
+
+    /**
+     * 指纹辨识超时
+     */
+    private Task<Void> timeoutFingerprintIdentify() {
+        return new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                replyFingerprintIdentify(current.getUid(), FINGERPRINT_STATUS_TIMEOUT, null);
+                scheduleTask(returnHome(), RETURN_HOME_TIMEOUT);
+
+                IFingerprintService fingerprintService =
+                        (IFingerprintService) serviceFactory.getInstance(ServiceFactory.FINGERPRINT);
+                fingerprintService.cancel();
+
+                updatePostCondition(SERVICE_STATE_IDLE, null);
+                return null;
+            }
+
+            @Override
+            protected void succeeded() {
+                BaseReceiveMessage.Resource resource =
+                        current.getResources().get(ResourceConstant.INDEX_FI_TIMEOUT);
+                VoiceUtil.add(resource.getVoices(), VoiceUtil.HIGH_PRIORITY);
+                updateMessagePaneAndShow(resource.getImage(),
+                        ((FingerprintIdentifyMessage) current).getExtras().get(ResourceConstant.INDEX_FI_TIMEOUT));
+            }
+
+            @Override
+            protected void failed() {
+                logger.error("process {} message {} failed when service timeout",
+                        current.getType(), current.getUid(), getException());
             }
         };
     }
@@ -1154,9 +1150,9 @@ public class MessageServiceImpl implements IMessageService {
                 CompletableFuture.runAsync(new Task<Void>() {
                     @Override
                     protected Void call() throws Exception {
-                        updatePostCondition(SERVICE_STATE_IDLE, null);
-                        replyFingerprintEnroll(current.getUid(), FINGERPRINT_STATUS_ERROR, null);
                         scheduleTask(returnHome(), RETURN_HOME_TIMEOUT);
+                        replyFingerprintEnroll(current.getUid(), FINGERPRINT_STATUS_ERROR, null);
+                        updatePostCondition(SERVICE_STATE_IDLE, null);
                         return null;
                     }
 
@@ -1180,9 +1176,9 @@ public class MessageServiceImpl implements IMessageService {
                 CompletableFuture.runAsync(new Task<Void>() {
                     @Override
                     protected Void call() throws Exception {
-                        updatePostCondition(SERVICE_STATE_IDLE, null);
                         replyFingerprintIdentify(current.getUid(), FINGERPRINT_STATUS_ERROR, null);
                         scheduleTask(returnHome(), RETURN_HOME_TIMEOUT);
+                        updatePostCondition(SERVICE_STATE_IDLE, null);
                         return null;
                     }
 
