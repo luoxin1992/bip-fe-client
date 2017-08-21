@@ -57,6 +57,8 @@ public class WSServiceImpl implements IWSService {
     @OnOpen
     public void onOpen(Session session) {
         logger.info("connect to web socket server {}", session.getRequestURI());
+        //设置session永不超时
+        session.setMaxIdleTimeout(0);
         this.session = session;
     }
 
