@@ -34,6 +34,7 @@ public class AppEntry extends Application {
         CrashUtil.setUncaughtExceptionHandler();
     }
 
+    @Override
     public void start(Stage stage) throws Exception {
         loadAppProps();
         processCliArgs();
@@ -42,6 +43,10 @@ public class AppEntry extends Application {
     @Override
     public void stop() throws Exception {
         Injector.forgetAll();
+    }
+
+    public static void main(String[] args) {
+        launch(args);
     }
 
     private void loadAppProps() {
