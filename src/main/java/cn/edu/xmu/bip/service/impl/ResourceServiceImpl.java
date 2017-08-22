@@ -4,9 +4,11 @@
 package cn.edu.xmu.bip.service.impl;
 
 import cn.com.lx1992.lib.client.constant.CommonConstant;
+import cn.com.lx1992.lib.client.constant.RegExpConstant;
 import cn.com.lx1992.lib.client.util.CrashUtil;
 import cn.com.lx1992.lib.client.util.HttpUtil;
 import cn.com.lx1992.lib.client.util.NativeUtil;
+import cn.com.lx1992.lib.client.util.UUIDUtil;
 import cn.edu.xmu.bip.dao.IResourceDAO;
 import cn.edu.xmu.bip.dao.factory.DAOFactory;
 import cn.edu.xmu.bip.domain.ResourceDO;
@@ -27,6 +29,7 @@ import javax.inject.Inject;
 import java.io.File;
 import java.nio.file.Paths;
 import java.text.MessageFormat;
+import java.util.AbstractMap;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -350,6 +353,23 @@ public class ResourceServiceImpl implements IResourceService {
         } catch (Exception e) {
             logger.error("download file from {} to {} failed", url, path, e);
             return false;
+        }
+    }
+
+    private Map.Entry<String, String> prepareUrlAndPath(String url) {
+        IAPIService apiService = (IAPIService) serviceFactory.getInstance(ServiceFactory.API);
+        String urlPrefix = apiService.getUrlPrefix();
+        String pathPrefix = NativeUtil.getAppDataDirectoryPath(null);
+
+        if (url.matches(RegExpConstant.HTTP_URL_PREFIX)) {
+            //绝对URL(照片)：下载地址保持不变、保存路径为路径前缀+随机UUID+文件扩展名
+            //TODO 未来会改成所有资源先全部同步到后端 然后直接从后端下载 不再有类似绝对地址
+            String filename = UUIDUtil.randomUUID() + url.substring(url.lastIndexOf('.'));
+            return new AbstractMap.SimpleEntry<>(url,
+                    Paths.get(pathPrefix, ResourceTypeEnum.PHOTO.getType(), filename).toString());
+        } else {
+            //相对URL：下载地址为URL前缀+相对URL、保存路径为路径前缀+相对URL
+            return new AbstractMap.SimpleEntry<>(urlPrefix + url, Paths.get(pathPrefix, url).toString());
         }
     }
 }
