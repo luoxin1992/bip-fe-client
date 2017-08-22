@@ -20,4 +20,7 @@ public class PreferenceKeyConstant {
     //服务
     public static final String SERVICE_STATE = "service-state";
     public static final String SERVICE_TYPE = "service-type";
+
+    private PreferenceKeyConstant() {
+    }
 }

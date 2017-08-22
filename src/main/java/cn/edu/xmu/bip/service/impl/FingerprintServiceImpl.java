@@ -115,62 +115,6 @@ public class FingerprintServiceImpl implements IFingerprintService {
         }
     }
 
-    /**
-     * 获取文件保存路径
-     *
-     * @param type 数据类型
-     * @return 保存路径
-     */
-    private String getDataSavePath(String type) {
-        String path = NativeUtil.getAppDataDirectoryPath(DATA_SUBDIRECTORY);
-        String filename = DateTimeUtil.getNowStr(DateTimeConstant.MILLIS_DATETIME_PATTERN);
-        switch (type) {
-            case DATA_TYPE_IMAGE:
-                filename += FILE_EXTENSION_IMAGE;
-                break;
-            case DATA_TYPE_TEMPLATE:
-                filename += FILE_EXTENSION_TEMPLATE;
-                break;
-        }
-        return path + File.separatorChar + filename;
-    }
-
-    /**
-     * 保存指纹图片到文件
-     *
-     * @param path 保存路径
-     */
-    private void saveImageToFile(String path) {
-        fpScannerObject.saveFingerprintToImage(path);
-        logger.info("save fingerprint image to file {}", path);
-    }
-
-    /**
-     * 保存指纹模板到文件
-     *
-     * @param template 指纹模板
-     * @param path     保存路径
-     */
-    private void saveTemplateToFile(String template, String path) {
-        try {
-            FileUtils.writeByteArrayToFile(new File(path), Base64.decodeBase64(template));
-            logger.info("save fingerprint template to file {}", path);
-        } catch (IOException e) {
-            logger.error("save fingerprint template to file {} failed", path, e);
-        }
-    }
-
-    /**
-     * 创建事件日志
-     *
-     * @param event 事件
-     * @param extra 附加信息
-     */
-    private void createLog(FingerprintEventEnum event, String extra) {
-        IFingerprintDAO fingerprintDAO = (IFingerprintDAO) daoFactory.getInstance(DAOFactory.FINGERPRINT);
-        fingerprintDAO.insert(event.getEvent(), extra);
-    }
-
     class FPScannerEvents implements IFPScannerEvents {
         @Override
         public void onImageReceived(Com4jObject pict) {
@@ -206,14 +150,17 @@ public class FingerprintServiceImpl implements IFingerprintService {
 
         @Override
         public void onFingerTouch(boolean onTouch, String readerSerNum) {
+            //手指按压事件
         }
 
         @Override
         public void onFingerGone(boolean onGone, String readerSerNum) {
+            //手指离开事件
         }
 
         @Override
         public void onFingerQuality(short actionResult, String readerSerNum) {
+            //指纹采集质量事件
         }
 
         @Override
@@ -258,6 +205,60 @@ public class FingerprintServiceImpl implements IFingerprintService {
 
             IMessageService messageService = (IMessageService) serviceFactory.getInstance(ServiceFactory.MESSAGE);
             messageService.onFingerprintIdentifyTemplate(fpScannerObject.getVerTemplateAsStr());
+        }
+
+        /**
+         * 获取文件保存路径
+         *
+         * @param type 数据类型
+         * @return 保存路径
+         */
+        private String getDataSavePath(String type) {
+            String path = NativeUtil.getAppDataDirectoryPath(DATA_SUBDIRECTORY);
+            String filename = DateTimeUtil.getNowStr(DateTimeConstant.MILLIS_DATETIME_PATTERN);
+
+            if (DATA_TYPE_IMAGE.equals(type)) {
+                filename += FILE_EXTENSION_IMAGE;
+            } else {
+                filename += FILE_EXTENSION_TEMPLATE;
+            }
+            return path + File.separatorChar + filename;
+        }
+
+        /**
+         * 保存指纹图片到文件
+         *
+         * @param path 保存路径
+         */
+        private void saveImageToFile(String path) {
+            fpScannerObject.saveFingerprintToImage(path);
+            logger.info("save fingerprint image to file {}", path);
+        }
+
+        /**
+         * 保存指纹模板到文件
+         *
+         * @param template 指纹模板
+         * @param path     保存路径
+         */
+        private void saveTemplateToFile(String template, String path) {
+            try {
+                FileUtils.writeByteArrayToFile(new File(path), Base64.decodeBase64(template));
+                logger.info("save fingerprint template to file {}", path);
+            } catch (IOException e) {
+                logger.error("save fingerprint template to file {} failed", path, e);
+            }
+        }
+
+        /**
+         * 创建事件日志
+         *
+         * @param event 事件
+         * @param extra 附加信息
+         */
+        private void createLog(FingerprintEventEnum event, String extra) {
+            IFingerprintDAO fingerprintDAO = (IFingerprintDAO) daoFactory.getInstance(DAOFactory.FINGERPRINT);
+            fingerprintDAO.insert(event.getEvent(), extra);
         }
     }
 }

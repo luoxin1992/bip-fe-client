@@ -327,9 +327,8 @@ public class AdminServiceImpl implements IAdminService {
                     CounterQueryBindResult result = queryCounterBind(mac, ip);
                     //调用查询绑定API有返回结果：此窗口已绑定过，本次为修改
                     modifyCounter(result.getId(), number, name, mac, ip);
-                } catch (Exception e) {
-                    if (e instanceof ServerException
-                            && ((ServerException) e).getCode() == CONFIG_COUNTER_UNBIND_ERROR_CODE) {
+                } catch (ServerException e) {
+                    if (e.getCode() == CONFIG_COUNTER_UNBIND_ERROR_CODE) {
                         //调用查询绑定API返回‘未绑定’错误：此窗口未曾绑定过，本次应创建
                         createCounter(number, name, mac, ip);
                     } else {

@@ -87,7 +87,7 @@ public class MessagePanePresenter implements Initializable {
         //监听label宽度变化，当宽度超过父布局scrollPane时，自动移动滚动条，形成跑马灯效果
         Timeline timeline = new Timeline();
         timeline.setCycleCount(Timeline.INDEFINITE);
-        lblContent.widthProperty().addListener((observable) -> rerunAnimation(timeline));
+        lblContent.widthProperty().addListener(observable -> rerunAnimation(timeline));
     }
 
     private void bindViewModel() {

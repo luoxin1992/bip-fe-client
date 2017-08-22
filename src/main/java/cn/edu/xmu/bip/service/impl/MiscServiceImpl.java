@@ -79,8 +79,8 @@ public class MiscServiceImpl implements IMiscService {
 
             @Override
             protected Void call() throws Exception {
-                //checkOs();
-                //checkJvm();
+                checkOs();
+                checkJvm();
                 checkBackend();
                 return null;
             }

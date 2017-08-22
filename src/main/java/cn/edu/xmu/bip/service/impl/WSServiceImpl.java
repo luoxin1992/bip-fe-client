@@ -36,7 +36,6 @@ import java.net.URI;
  */
 @ClientEndpoint
 public class WSServiceImpl implements IWSService {
-    private static final int RECONNECT_MAX = 3;
     private static final String URL_PREFIX;
     private static final boolean URL_VALID;
 
@@ -45,9 +44,8 @@ public class WSServiceImpl implements IWSService {
     @Inject
     private ServiceFactory serviceFactory;
 
-    //当前会话及重新连接次数
+    //当前会话
     private Session session;
-    private int reconnect = 0;
 
     static {
         URL_PREFIX = PreferencesUtil.get(PreferenceKeyConstant.CONFIG_BACKEND_WS);

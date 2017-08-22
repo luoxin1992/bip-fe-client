@@ -38,6 +38,9 @@ public class VoiceUtil {
         playlist = new ArrayList<>();
     }
 
+    private VoiceUtil() {
+    }
+
     /**
      * 插入新文件到播放列表
      * <p>
@@ -51,7 +54,7 @@ public class VoiceUtil {
      * @param paths    新文件路径
      * @param priority 播放优先级
      */
-    public synchronized static void add(List<String> paths, int priority) {
+    public static synchronized void add(List<String> paths, int priority) {
         if (playlist.isEmpty()) {
             //1
             index = -1;

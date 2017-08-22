@@ -31,4 +31,7 @@ public class ResourceConstant {
     public static final int INDEX_FI_ERROR = 1;
     public static final int INDEX_FI_TIMEOUT = 2;
     public static final int INDEX_FI = 3;
+
+    private ResourceConstant() {
+    }
 }

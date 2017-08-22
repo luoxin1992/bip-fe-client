@@ -61,6 +61,9 @@ public class StageFactory {
         stages.putIfAbsent(SPLASH, splashStage);
     }
 
+    private StageFactory() {
+    }
+
     /**
      * 展示舞台(Stage)
      *
