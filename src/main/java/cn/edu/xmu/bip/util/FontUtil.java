@@ -86,7 +86,7 @@ public class FontUtil {
         } else {
             int multiple = (int) (parentHeight / BASE_FONT_SIZE);
             //如果可容纳的字体大小正好和父布局相等，字体主动缩小一号，避免顶格显示
-            if (parentHeight % BASE_FONT_SIZE == 0) {
+            if (Double.compare(parentHeight % BASE_FONT_SIZE, 0) == 0) {
                 multiple -= 1;
             }
             return multiple * BASE_FONT_SIZE;
